@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+/* ── Tokens de diseño ─────────────────────────────────────────────────────
+   Los colores conservan la identidad de Rústica. Los que se usan como texto
+   sobre fondo claro fueron verificados con la fórmula WCAG 2.1 (≥ 4.5:1) y
+   los bordes de controles con ≥ 3:1 (criterios 1.4.3 y 1.4.11). */
+@theme {
+  --font-display: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-source), system-ui, sans-serif;
+
+  --color-ink: #1e1e1e;
+  --color-body: #514a43; /* 8.2:1 sobre crema */
+  --color-muted: #6b6055; /* 5.8:1 sobre crema (antes #999: 2.85:1) */
+  --color-red: #c41e3a; /* 5.8:1 sobre blanco */
+  --color-red-dark: #9e1830;
+  --color-red-tint: #fff0f2;
+  --color-gold: #d4a017; /* solo sobre fondos oscuros (7.0:1 sobre #1e1e1e) */
+  --color-gold-light: #f0c040;
+  --color-charcoal: #2c2c2c;
+  --color-cream: #fdf8f0;
+  --color-sand: #f5f0e8;
+  --color-line: #e8e0d5; /* borde decorativo de tarjetas */
+  --color-field: #767676; /* borde de campos: 4.5:1 sobre blanco (antes #ddd: 1.4:1) */
+  --color-footer: #303442;
+  --color-wa: #0e7c46; /* WhatsApp: blanco sobre este verde = 5.3:1 (antes 2.6:1) */
+}
+
+/* ── Preferencias de visualización ────────────────────────────────────────
+   Se activan con el panel "Accesibilidad" o automáticamente si el sistema
+   operativo pide más contraste (prefers-contrast: more). */
+html[data-contrast='high'] {
+  --color-body: #1e1e1e;
+  --color-muted: #1e1e1e;
+  --color-red: #9e1830;
+  --color-red-dark: #7a0f22;
+  --color-line: #1e1e1e;
+  --color-field: #1e1e1e;
+  --color-footer: #1e1e1e;
+  --color-wa: #0a5c33;
+}
+@media (prefers-contrast: more) {
+  :root {
+    --color-body: #1e1e1e;
+    --color-muted: #1e1e1e;
+    --color-red: #9e1830;
+    --color-red-dark: #7a0f22;
+    --color-line: #1e1e1e;
+    --color-field: #1e1e1e;
+    --color-footer: #1e1e1e;
+    --color-wa: #0a5c33;
+  }
+}
+
+/* Texto ampliado: todo el diseño usa rem, así que escala completo. */
+html[data-text='large'] { font-size: 125%; }
+html[data-text='xlarge'] { font-size: 150%; }
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: #fff;
+  color: var(--color-ink);
+  line-height: 1.5;
+}
+
+/* Foco visible en TODOS los controles (2.4.7). En superficies oscuras se
+   invierte el color para mantener ≥ 3:1. */
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 3px;
+}
+.on-dark :focus-visible { outline-color: var(--color-gold-light); }
+
+::placeholder { color: var(--color-muted); opacity: 1; }
+
+/* Enlace "saltar al contenido" (2.4.1) */
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  background: var(--color-ink);
+  color: #fff;
+  font-weight: 700;
+  transition: top 0.15s;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ── Ventanas emergentes con <dialog> nativo ──────────────────────────────
+   El navegador aporta: foco atrapado, Esc para cerrar, fondo inerte y
+   retorno del foco al botón que abrió la ventana. */
+dialog.modal {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: 100vw;
+  max-height: 100dvh;
+  overflow: visible;
+  color: var(--color-ink);
+}
+dialog.modal::backdrop {
+  background: rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(4px);
+}
+body:has(dialog[open]) { overflow: hidden; }
+
+/* Barra de desplazamiento discreta (se mantiene del diseño original) */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ── Movimiento reducido (vestibular, epilepsia, atención) ────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html[data-motion='reduce'] { scroll-behavior: auto; }
+html[data-motion='reduce'] *,
+html[data-motion='reduce'] *::before,
+html[data-motion='reduce'] *::after {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}

@@ -70,6 +70,7 @@ Disponible desde cualquier página. Los cambios se aplican al instante y se recu
 
 | Opción | Qué hace |
 | --- | --- |
+| Modo claro / Modo noche | Cambia entre fondo claro y oscuro. También hay un botón de sol y luna en la cabecera, siempre visible; sigue la preferencia del sistema si el visitante no eligió |
 | Modo estándar / Alto contraste | Cambia a colores de mayor contraste (también responde a `prefers-contrast: more`) |
 | Escala de grises | Muestra la página sin color para comprobar que nada depende de él |
 | Colores para daltonismo | Paletas separadas para **protanopia**, **deuteranopia** y **tritanopia** |
@@ -77,12 +78,48 @@ Disponible desde cualquier página. Los cambios se aplican al instante y se recu
 | Texto de mayor legibilidad | Fuente sencilla y más espacio entre letras, palabras y líneas |
 | Reducir animaciones | Quita transiciones y animaciones (también responde a `prefers-reduced-motion`) |
 
+## Navegación con teclado
+
+Todo el sitio se puede usar sin ratón. El foco siempre es visible (anillo grueso) y nunca queda tapado por la cabecera fija.
+
+### Teclas generales
+
+| Tecla | Qué hace |
+| --- | --- |
+| **Tab** | Pasa al siguiente enlace, botón o campo |
+| **Shift + Tab** | Vuelve al anterior |
+| **Enter** | Abre un enlace, pulsa un botón o envía un formulario |
+| **Espacio** | Pulsa un botón, marca una casilla o elige una opción |
+| **Esc** | Cierra una ventana emergente o un desplegable |
+| **↑ ↓** | Desplazan la página (si el foco no está en un campo) |
+| **Re Pág / Av Pág**, **Espacio / Shift + Espacio** | Suben y bajan una pantalla |
+| **Inicio / Fin** | Van al principio o al final de la página |
+| **Ctrl + +** / **Ctrl + −** | Amplían y reducen el zoom del navegador |
+
+### Teclas por componente
+
+| Componente | Teclas | Qué hace |
+| --- | --- | --- |
+| **Saltar al contenido** | Tab (primer elemento), Enter | Salta la cabecera y va directo al contenido principal |
+| **Cabecera** | Tab, Enter | Recorre logo, navegación, redes, botón de sol y luna y botón de accesibilidad |
+| **Botón sol y luna** | Enter o Espacio | Cambia entre modo claro y modo noche |
+| **Menú móvil** | Enter o Espacio en "Menú", Esc | Abre y cierra el menú |
+| **Ventanas emergentes** (reserva, detalles, información, accesibilidad) | Tab, Shift + Tab, Esc | El foco queda dentro de la ventana; Esc la cierra y devuelve el foco al botón que la abrió |
+| **Desplegables** (local y categorías del menú) | Enter o Espacio, Tab, Esc | Abren la lista, recorren y eligen una opción, y cierran sin elegir |
+| **Zonas de Sedes** | ← → ↑ ↓ | Cambian de zona; Tab entra y sale del grupo |
+| **Carruseles** | Tab, Enter o Espacio | Pasa por "Ver todas", las flechas y las tarjetas; las flechas desplazan el carrusel |
+| **Formulario de reserva** | Tab, Enter | Pasa de campo en campo; Enter envía |
+| **Listas de selección** (Hora, Personas, Local) | ↑ ↓, primera letra, Enter | Cambian la opción |
+| **Campo de fecha** | ← →, ↑ ↓, números | Se mueve entre día, mes y año y cambia el valor |
+| **Resumen de errores** | Tab, Enter | Cada enlace lleva el foco al campo con el problema |
+| **Panel de accesibilidad** | ↑ ↓, Espacio | Cambian las opciones de un grupo y marcan o desmarcan casillas |
+
 ## Accesibilidad por tipo de discapacidad
 
 | Perfil | Qué se hizo |
 | --- | --- |
 | **Visual: ceguera** | `lang="es"`, título por página, un `h1` por vista, jerarquía de títulos, landmarks, enlace "Saltar al contenido", etiquetas asociadas a cada campo, nombres accesibles en todos los botones, estados con `aria-current` / `aria-expanded`, avisos con `role="status"` y `role="alert"`, fotos decorativas con `alt=""`, aviso "(se abre en una pestaña nueva)". |
-| **Visual: baja visión** | Contrastes corregidos (texto ≥ 4.5:1, bordes de campos ≥ 3:1), foco visible grueso en todo el sitio, texto escalable (rem), alto contraste y texto 125 % / 150 %. |
+| **Visual: baja visión y sensibilidad a la luz** | Contrastes corregidos (texto ≥ 4.5:1, bordes de campos ≥ 3:1), foco visible grueso en todo el sitio, texto escalable (rem), alto contraste, texto 125 % / 150 % y **modo noche** con contrastes verificados (texto principal 14.3:1, texto rojo 6.5:1). |
 | **Visual: daltonismo** | Paleta base (#FFFFFF, #202124, #595959, #D9D9D9, #F5F1E9) y tres paletas por tipo: en protanopia y deuteranopia la marca pasa a azul y el error a naranja oscuro; en tritanopia se conserva el rojo y se evitan el azul y el amarillo. Éxito, error, aviso e información (`StatusMessage`) usan **icono + texto + forma de borde**, así que no dependen del color. |
 | **Auditiva** | El sitio no usa audio ni video; toda la información está en texto. |
 | **Motora** | Todo operable con teclado, `<dialog>` nativo (foco atrapado, Esc, retorno del foco), desplegables que cierran con Esc, objetivos táctiles ≥ 44 px, formulario real (Enter envía), sin gestos complejos ni límites de tiempo. |
@@ -96,6 +133,8 @@ Disponible desde cualquier página. Los cambios se aplican al instante y se recu
 - De un `App.tsx` de 1 561 líneas a componentes pequeños por responsabilidad; datos separados de la interfaz.
 - Navegación con rutas reales (botón "Atrás", enlaces compartibles, título por página) en lugar de estado interno.
 - Colores en tokens de diseño (`@theme`) en vez de estilos en línea repetidos.
+- **Modo noche** con botón en la cabecera y en el panel, y paleta propia para cada tipo de daltonismo en oscuro.
+- Colores semánticos (`surface`, `brand`, `error`, `success`) en lugar de `bg-white` y `text-red`, para que el tema y las paletas cambien todo de una vez.
 - Ventanas emergentes centradas y más anchas (hasta 42 rem), con el mismo componente para Ver detalles, Hacer reserva, Ver más, Ver información y Accesibilidad.
 - Se eliminó lo que no se usaba: carpeta `imports/`, fuente Dancing Script, `locations`/`Branch` sin uso, estado `hover` en JavaScript (ahora CSS), listas duplicadas de destacados.
 - Se retiraron los botones del pie "Trabaja con Nosotros" y "Libro de Reclamaciones", que no tenían ninguna acción. Agrégalos de nuevo cuando tengas sus enlaces reales.
@@ -105,7 +144,7 @@ Disponible desde cualquier página. Los cambios se aplican al instante y se recu
 
 ## Pendiente de verificar
 
-- Probar en navegador con teclado, zoom 200 %, un lector de pantalla (NVDA / VoiceOver / TalkBack), Lighthouse o axe y Stark.
+- Recorrer todo el sitio solo con teclado (tabla de arriba), con zoom 200 %, un lector de pantalla (NVDA / VoiceOver / TalkBack), Lighthouse o axe y Stark.
 - Revisar que ningún componente use colores escritos a mano (`bg-[#...]`, `text-green-600`), porque no cambiarían con las paletas de daltonismo.
 - La reserva es de demostración: no envía datos a ningún servidor.
 - Los shows del código tienen fechas de octubre de 2026 (ya pasaron); actualízalos si vas a publicar.

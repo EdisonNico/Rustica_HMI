@@ -12,19 +12,24 @@ Parte de un prototipo (v2.0) con barreras de accesibilidad y llega a una versió
 
 ## Herramientas utilizadas
 
-| Herramienta | Para qué se usa |
+**Interfaz**  
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+
+**Accesibilidad y pruebas**  
+![WCAG 2.1 AA](https://img.shields.io/badge/WCAG_2.1_AA-005A9C?style=flat) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white) ![Lighthouse](https://img.shields.io/badge/Lighthouse-F44B21?style=flat&logo=lighthouse&logoColor=white) ![axe](https://img.shields.io/badge/axe-6E3AAF?style=flat) ![Stark](https://img.shields.io/badge/Stark-111827?style=flat) ![NVDA](https://img.shields.io/badge/NVDA-4B5563?style=flat) ![VoiceOver](https://img.shields.io/badge/VoiceOver-000000?style=flat&logo=apple&logoColor=white) ![TalkBack](https://img.shields.io/badge/TalkBack-3DDC84?style=flat&logo=android&logoColor=black)
+
+**Despliegue y control de versiones**  
+![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=black) ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
+
+**IA**  
+![Claude Code](https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=claude&logoColor=white)
+
+| Recurso | Para qué se usa |
 | --- | --- |
-| **Next.js (App Router)** | Rutas reales (`/menu`, `/sedes`…), título por página, exportación a HTML estático |
-| **React + TypeScript** | Componentes reutilizables y tipado estricto |
-| **Tailwind CSS 4** | Estilos con tokens de diseño (`@theme`) en lugar de estilos repetidos |
-| **next/font** | Fuentes Playfair Display (títulos) y Source Sans 3 (texto) |
-| **`<dialog>` nativo del navegador** | Ventanas emergentes con foco atrapado, Esc para cerrar y retorno del foco |
-| **`localStorage`** | Guarda las preferencias de accesibilidad entre visitas |
-| **Render** | Publicación del sitio |
-| **Figma** | Rediseño inclusivo (v3.0) |
-| **Stark, Lighthouse, axe** | Pruebas de contraste y accesibilidad |
-| **NVDA / VoiceOver / TalkBack** | Pruebas con lectores de pantalla |
-| **Simuladores de daltonismo** | Comprobar protanopia, deuteranopia y tritanopia |
+| `next/font` | Fuentes Playfair Display (títulos) y Source Sans 3 (texto) |
+| `<dialog>` nativo | Ventanas emergentes con foco atrapado, Esc para cerrar y retorno del foco |
+| `localStorage` | Guarda las preferencias de accesibilidad entre visitas |
+| Simulación de daltonismo | Comprobar protanopia, deuteranopia y tritanopia |
 
 ## Comandos
 
@@ -49,10 +54,6 @@ El sitio se exporta como **HTML estático**, por lo que debe publicarse como **S
 (La v2.0 publicaba `dist`; ahora es `out`.)
 
 > Si Render muestra una pantalla de "el servicio se está activando…", el proyecto está creado como **Web Service** del plan gratuito, que se duerme tras unos 15 minutos sin visitas. Un Static Site no se duerme. Para evitarlo, crea el proyecto como Static Site con los valores de arriba.
-
-## Configuración opcional
-
-`NEXT_PUBLIC_WHATSAPP_NUMBER` (ver `.env.example`): número en formato internacional sin `+`. Si no se define, el botón flotante de WhatsApp no se muestra.
 
 ## Estructura
 

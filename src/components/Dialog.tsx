@@ -50,7 +50,7 @@ export function Dialog({ open, onClose, labelledBy, children }: DialogProps) {
 export function DialogPanel({ size = 'md', children }: { size?: 'sm' | 'md' | 'lg' | '2xl'; children: ReactNode }) {
   const width = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-lg', '2xl': 'max-w-2xl' }[size]
   return (
-    <div className={`w-[calc(100vw-2rem)] ${width} max-h-[90dvh] overflow-y-auto rounded-2xl bg-white`}>{children}</div>
+    <div className={`w-[calc(100vw-2rem)] ${width} max-h-[90dvh] overflow-y-auto rounded-2xl bg-surface`}>{children}</div>
   )
 }
 
@@ -82,7 +82,7 @@ export function DialogHeader({
   onClose: () => void
 }) {
   return (
-    <div className="on-dark flex items-start justify-between gap-4 bg-ink px-6 py-5">
+    <div className="on-dark flex items-start justify-between gap-4 bg-charcoal px-6 py-5">
       <div>
         <p className="mb-1 text-xs uppercase tracking-widest text-gold">{eyebrow}</p>
         <h2 id={titleId} className="font-display text-2xl font-bold text-white">

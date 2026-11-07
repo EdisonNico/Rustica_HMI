@@ -33,7 +33,7 @@ export function CarouselSection({ title, href, linkLabel, noun, children }: Prop
       <div className="mb-6 flex items-center justify-between gap-4">
         <h2 className="border-l-2 border-gold pl-3 font-display text-xl font-bold text-ink sm:text-2xl">{title}</h2>
         <div className="flex items-center gap-3">
-          <Link href={href} className="inline-flex min-h-11 items-center text-sm font-bold text-red underline-offset-4 hover:underline">
+          <Link href={href} className="inline-flex min-h-11 items-center text-sm font-bold text-brand underline-offset-4 hover:underline">
             {linkLabel}
           </Link>
           <div className="flex gap-2">
@@ -41,7 +41,7 @@ export function CarouselSection({ title, href, linkLabel, noun, children }: Prop
               type="button"
               onClick={() => move(-1)}
               aria-label={`Ver ${noun} anteriores`}
-              className={`${arrow} border border-line bg-white text-red hover:bg-red hover:text-white`}
+              className={`${arrow} border border-line bg-surface text-brand hover:bg-red hover:text-white`}
             >
               <span aria-hidden="true">←</span>
             </button>
@@ -69,7 +69,7 @@ export function HighlightCard({ href, children }: { href: string; children: Reac
     <li className="w-[78vw] flex-none snap-start sm:w-[260px]">
       <Link
         href={href}
-        className="group block h-full overflow-hidden rounded-2xl border border-line bg-white text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(196,30,58,0.14)]"
+        className="group block h-full overflow-hidden rounded-2xl border border-line bg-surface text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(196,30,58,0.14)]"
       >
         {children}
       </Link>

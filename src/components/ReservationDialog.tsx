@@ -34,7 +34,7 @@ function validate(v: { name: string; email: string; phone: string; date: string;
 }
 
 const inputBase =
-  'w-full rounded-lg border-2 bg-white px-4 py-2.5 text-base text-ink min-h-11'
+  'w-full rounded-lg border-2 bg-surface px-4 py-2.5 text-base text-ink min-h-11'
 
 /** Campo con etiqueta asociada, ayuda opcional y mensaje de error (texto + ícono). */
 function Field({
@@ -62,7 +62,7 @@ function Field({
       )}
       {children}
       {error && (
-        <p id={`${fieldId}-error`} className="mt-1 flex gap-1.5 text-sm font-semibold text-red">
+        <p id={`${fieldId}-error`} className="mt-1 flex gap-1.5 text-sm font-semibold text-error">
           <span aria-hidden="true">⚠</span>
           <span>{error}</span>
         </p>
@@ -134,7 +134,7 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
           <p className="mb-4 text-5xl" aria-hidden="true">
             🎉
           </p>
-          <h2 id={TITLE_ID} ref={confirmRef} tabIndex={-1} className="mb-3 font-display text-2xl font-bold text-red">
+          <h2 id={TITLE_ID} ref={confirmRef} tabIndex={-1} className="mb-3 font-display text-2xl font-bold text-brand">
             ¡Reserva confirmada!
           </h2>
           <div role="status" className="mb-6 space-y-1 text-body">
@@ -157,7 +157,7 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
   const describedBy = (key: FieldName, hint?: boolean) =>
     [hint ? `${id(key)}-hint` : '', errors[key] ? `${id(key)}-error` : ''].filter(Boolean).join(' ') || undefined
 
-  const border = (key: FieldName) => (errors[key] ? 'border-red' : 'border-field')
+  const border = (key: FieldName) => (errors[key] ? 'border-error' : 'border-field')
 
   return (
     <DialogPanel size="md">
@@ -166,8 +166,8 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
         <p className="text-sm text-muted">Todos los campos son obligatorios.</p>
 
         {errorList.length > 0 && (
-          <div ref={summaryRef} tabIndex={-1} className="rounded-xl border-2 border-red bg-red-tint p-4">
-            <h3 className="mb-2 font-bold text-red-dark">
+          <div ref={summaryRef} tabIndex={-1} className="rounded-xl border-2 border-error bg-error-tint p-4">
+            <h3 className="mb-2 font-bold text-error">
               Revisa {errorList.length === 1 ? 'este campo' : `estos ${errorList.length} campos`}
             </h3>
             <ul className="list-disc space-y-1 pl-5 text-sm text-ink">

@@ -28,7 +28,7 @@ export function LocationsExplorer() {
               onChange={() => setZone(item.label)}
               className="peer sr-only"
             />
-            <span className="inline-flex min-h-11 cursor-pointer items-center rounded-full border-[1.5px] border-field bg-white px-5 py-2 text-sm font-semibold text-muted transition-colors peer-checked:border-red peer-checked:bg-red peer-checked:text-white peer-focus-visible:outline-3 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-ink peer-checked:before:mr-1.5 peer-checked:before:content-['✓']">
+            <span className="inline-flex min-h-11 cursor-pointer items-center rounded-full border-[1.5px] border-field bg-surface px-5 py-2 text-sm font-semibold text-muted transition-colors peer-checked:border-red peer-checked:bg-red peer-checked:text-white peer-focus-visible:outline-3 peer-focus-visible:outline-offset-3 peer-focus-visible:outline-ink peer-checked:before:mr-1.5 peer-checked:before:content-['✓']">
               {item.label}
             </span>
           </label>
@@ -43,7 +43,7 @@ export function LocationsExplorer() {
         {group.locations.map(location => (
           <li
             key={location.value}
-            className="flex items-center gap-4 rounded-xl border-[1.5px] border-line bg-white p-4 transition-colors hover:border-red hover:bg-red-tint"
+            className="flex items-center gap-4 rounded-xl border-[1.5px] border-line bg-surface p-4 transition-colors hover:border-red hover:bg-red-tint"
           >
             <span aria-hidden="true" className="grid size-10 shrink-0 place-items-center rounded-full bg-red text-lg text-white">
               📍
@@ -57,7 +57,7 @@ export function LocationsExplorer() {
                 type="button"
                 onClick={() => setSelected(location)}
                 aria-label={`Ver información de Rústica ${location.label}`}
-                className="inline-flex min-h-11 cursor-pointer items-center text-sm font-semibold text-red underline-offset-4 hover:underline"
+                className="inline-flex min-h-11 cursor-pointer items-center text-sm font-semibold text-brand underline-offset-4 hover:underline"
               >
                 Ver información
               </button>
@@ -88,7 +88,7 @@ export function LocationsExplorer() {
                 ['Discoteca', selected.disco],
               ].map(([term, value]) => (
                 <div key={term}>
-                  <dt className="mb-1 text-xs font-bold uppercase tracking-wider text-red">{term}</dt>
+                  <dt className="mb-1 text-xs font-bold uppercase tracking-wider text-brand">{term}</dt>
                   <dd className="text-sm leading-relaxed text-body">{value}</dd>
                 </div>
               ))}

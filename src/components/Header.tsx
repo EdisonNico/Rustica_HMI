@@ -8,6 +8,7 @@ import logo from '@/assets/logo.png'
 import { navEntries, socialLinks } from '@/data/nav'
 import { useReservation } from './ReservationProvider'
 import { PreferencesDialog } from './PreferencesDialog'
+import { ThemeToggle } from './ThemeToggle'
 import { AccessibilityIcon, CloseIcon, MenuIcon, SocialIcon } from './Icons'
 import { NewTab, primaryButton } from './ui'
 import { useDismiss } from '@/lib/useDismiss'
@@ -26,15 +27,15 @@ export function Header() {
 
   const isActive = (href: string) => normalize(href) === pathname
   const linkClass = (active: boolean) =>
-    `inline-flex min-h-11 items-center rounded-lg border-b-2 px-3 text-sm transition-colors hover:bg-cream hover:text-red ${
+    `inline-flex min-h-11 items-center rounded-lg border-b-2 px-3 text-sm transition-colors hover:bg-cream hover:text-brand ${
       active ? 'border-red bg-cream font-bold text-ink' : 'border-transparent text-ink'
     }`
 
   return (
-    <header ref={wrapper} className="sticky top-0 z-40 border-b border-line bg-white shadow-[0_2px_16px_rgba(0,0,0,0.1)]">
+    <header ref={wrapper} className="sticky top-0 z-40 border-b border-line bg-surface shadow-[0_2px_16px_rgba(0,0,0,0.1)]">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-3">
         <Link href="/" className="shrink-0 rounded-lg" aria-label="Rústica, ir al inicio">
-          <Image src={logo} alt="" className="block h-11 w-auto" priority />
+          <Image src={logo} alt="" className="logo-header block h-11 w-auto" priority />
         </Link>
 
         <nav aria-label="Principal" className="hidden items-center gap-1 lg:flex">
@@ -57,17 +58,18 @@ export function Header() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${social.label} de Rústica`}
-                className="grid size-11 place-items-center rounded-lg text-ink hover:bg-cream hover:text-red"
+                className="grid size-11 place-items-center rounded-lg text-ink hover:bg-cream hover:text-brand"
               >
                 <SocialIcon network={social.network} />
                 <NewTab />
               </a>
             ))}
+            <ThemeToggle />
             <button
               type="button"
               onClick={() => setPrefsOpen(true)}
               aria-label="Preferencias de accesibilidad"
-              className="grid size-11 cursor-pointer place-items-center rounded-lg text-ink hover:bg-cream hover:text-red"
+              className="grid size-11 cursor-pointer place-items-center rounded-lg text-ink hover:bg-cream hover:text-brand"
             >
               <AccessibilityIcon />
             </button>
@@ -88,7 +90,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <nav id="menu-movil" aria-label="Principal" className="flex flex-col gap-2 border-t border-line bg-white px-6 py-4 lg:hidden">
+        <nav id="menu-movil" aria-label="Principal" className="flex flex-col gap-2 border-t border-line bg-surface px-6 py-4 lg:hidden">
           {navEntries.map(entry =>
             entry.type === 'reserve' ? (
               <button
@@ -114,6 +116,7 @@ export function Header() {
               </Link>
             ),
           )}
+          <ThemeToggle withLabel className="w-full justify-start gap-3 rounded-xl px-4 py-3 text-sm font-medium" />
           <button
             type="button"
             onClick={() => {

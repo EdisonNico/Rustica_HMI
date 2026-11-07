@@ -15,7 +15,7 @@ export function Poster({ src, size, position }: { src: string; size: string; pos
 export function PageHeading({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle?: string }) {
   return (
     <header className="mb-10 text-center">
-      <p className="mb-2 text-xs uppercase tracking-widest text-red">{eyebrow}</p>
+      <p className="mb-2 text-xs uppercase tracking-widest text-brand">{eyebrow}</p>
       <h1 className="mb-2 font-display text-3xl font-bold text-ink">{title}</h1>
       {subtitle && <p className="text-muted">{subtitle}</p>}
     </header>
@@ -33,7 +33,7 @@ export function Section({
   children: ReactNode
 }) {
   return (
-    <div className={`px-6 py-16 ${tone === 'cream' ? 'bg-cream' : 'bg-white'}`}>
+    <div className={`px-6 py-16 ${tone === 'cream' ? 'bg-cream' : 'bg-surface'}`}>
       <div className={`mx-auto ${width === '5xl' ? 'max-w-5xl' : 'max-w-6xl'}`}>{children}</div>
     </div>
   )

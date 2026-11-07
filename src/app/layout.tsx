@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 /** Restaura las preferencias guardadas antes de pintar (evita el parpadeo).
  *  Las claves deben coincidir con PreferencesDialog.tsx. */
-const prefsScript = `try{var p=JSON.parse(localStorage.getItem('rustica-prefs')||'{}'),d=document.documentElement;['contrast','text','motion','grayscale','legible','palette'].forEach(function(k){if(p[k]&&p[k]!=='normal'&&p[k]!=='off')d.dataset[k]=p[k]})}catch(e){}`
+const prefsScript = `try{var p=JSON.parse(localStorage.getItem('rustica-prefs')||'{}'),d=document.documentElement;['contrast','text','motion','grayscale','legible','palette','theme'].forEach(function(k){if(p[k]&&p[k]!=='normal'&&p[k]!=='off'&&p[k]!=='light')d.dataset[k]=p[k]});if(!p.theme&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)d.dataset.theme='dark'}catch(e){}`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

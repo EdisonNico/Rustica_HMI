@@ -16,16 +16,16 @@ export function PromotionsGrid() {
       <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {promotions.map(promotion => (
           <li key={promotion.title}>
-            <article className="group h-full overflow-hidden rounded-2xl border border-line bg-white shadow-[0_3px_14px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(196,30,58,0.14)]">
+            <article className="group h-full overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_3px_14px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(196,30,58,0.14)]">
               <Poster src={PROMOTIONS_BOARD.src} size={PROMOTIONS_BOARD.size} position={promotion.position} />
               <div className="p-4">
                 <h2 className="mb-1 font-bold leading-snug text-ink">{promotion.title}</h2>
-                {promotion.price && <p className="mb-3 text-sm font-bold text-red">{promotion.price}</p>}
+                {promotion.price && <p className="mb-3 text-sm font-bold text-brand">{promotion.price}</p>}
                 <button
                   type="button"
                   onClick={() => setSelected(promotion)}
                   aria-label={`Ver más sobre ${promotion.title}`}
-                  className="min-h-11 w-full cursor-pointer rounded-xl bg-cream py-2.5 text-sm font-bold text-red transition-colors hover:bg-red hover:text-white"
+                  className="min-h-11 w-full cursor-pointer rounded-xl bg-cream py-2.5 text-sm font-bold text-brand transition-colors hover:bg-red hover:text-white"
                 >
                   Ver más
                 </button>

@@ -5,11 +5,11 @@ import { legalSections } from '@/data/legal'
 export function LegalDocument({ title }: { title: string }) {
   return (
     <div className="bg-cream px-6 py-14 sm:py-20">
-      <article className="mx-auto max-w-4xl rounded-2xl border border-line bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-12">
-        <Link href="/" className="mb-8 inline-flex min-h-11 items-center text-sm font-semibold text-red hover:text-red-dark">
+      <article className="mx-auto max-w-4xl rounded-2xl border border-line bg-surface px-6 py-8 shadow-sm sm:px-10 sm:py-12">
+        <Link href="/" className="mb-8 inline-flex min-h-11 items-center text-sm font-semibold text-brand hover:text-brand-dark">
           ← Volver al inicio
         </Link>
-        <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-red">Rústica Perú</p>
+        <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-brand">Rústica Perú</p>
         <h1 className="mb-3 font-display text-3xl font-bold text-ink sm:text-4xl">{title}</h1>
         <p className="text-sm font-bold uppercase tracking-wide text-muted">Políticas de privacidad de datos personales</p>
         <p className="mb-10 mt-1 text-sm font-bold text-ink">RUSTICA CLUB MEMBRESIAS S.A.C.</p>

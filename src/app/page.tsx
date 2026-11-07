@@ -27,14 +27,14 @@ const cardText = (title: string, subtitle: string) => (
 export default function HomePage() {
   return (
     <>
-      <div className="on-dark relative flex min-h-[580px] items-end justify-center overflow-hidden bg-ink text-center">
+      <div className="on-dark relative flex min-h-[580px] items-end justify-center overflow-hidden bg-charcoal text-center">
         <Image src={hero} alt="" priority fill sizes="100vw" className="object-cover object-top opacity-90" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent from-40% to-[rgba(10,5,5,0.82)]" aria-hidden="true" />
         <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-14">
           <h1 className="sr-only">Rústica Shows. Con los mejores artistas en vivo</h1>
           <Link
             href="/menu/"
-            className="inline-flex min-h-12 items-center rounded-xl border-2 border-gold bg-ink/85 px-8 py-3.5 text-base font-bold text-gold transition-colors hover:bg-ink"
+            className="hero-cta inline-flex min-h-12 items-center rounded-xl border-2 px-8 py-3.5 text-base font-bold transition-colors"
           >
             Ver Menú
           </Link>

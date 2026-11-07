@@ -25,11 +25,15 @@
   --color-gold: #d4a017;       /* solo sobre fondos oscuros */
   --color-gold-light: #f0c040;
   --color-charcoal: #202124;
-  --color-footer: #202124;
+  --color-footer: #303442;     /* coincide con el fondo de footer-logo.png */
   --color-wa: #0e7c46;         /* blanco sobre este verde = 5.3:1 */
 
   /* Estados: siempre se muestran con icono + texto (StatusMessage). */
   --color-success: #0e7c46;
+  --color-page: #ffffff;       /* fondo de la página */
+  --color-surface: #ffffff;    /* tarjetas, ventanas, formularios, cabecera */
+  --color-brand: #c41e3a;      /* rojo para TEXTO y enlaces (se aclara en modo noche) */
+  --color-brand-dark: #9e1830;
   --color-error: #9e1830;
   --color-error-tint: #fff0f2;
   --color-accent: #9e1830;     /* acento secundario (etiquetas, resaltes) */
@@ -46,6 +50,8 @@ html[data-contrast='high'] {
   --color-ink: #000000;
   --color-red: #9e1830;
   --color-red-dark: #7a0f22;
+  --color-brand: #9e1830;
+  --color-brand-dark: #7a0f22;
   --color-line: #202124;
   --color-field: #000000;
   --color-footer: #000000;
@@ -81,6 +87,8 @@ html[data-palette='protanopia'],
 html[data-palette='deuteranopia'] {
   --color-red: #0b5cad;
   --color-red-dark: #084482;
+  --color-brand: #0b5cad;
+  --color-brand-dark: #084482;
   --color-red-tint: #eaf2fb;
   --color-accent: #8a4b00;
   --color-success: #0b5cad;
@@ -107,6 +115,8 @@ html[data-palette='protanopia'][data-contrast='high'],
 html[data-palette='deuteranopia'][data-contrast='high'] {
   --color-red: #084482;
   --color-red-dark: #062f5c;
+  --color-brand: #084482;
+  --color-brand-dark: #062f5c;
   --color-accent: #6b3a00;
   --color-success: #084482;
   --color-error: #7a2c00;
@@ -118,6 +128,71 @@ html[data-palette='tritanopia'][data-contrast='high'] {
   --color-error: #9e1830;
   --color-wa: #004d50;
 }
+
+
+/* ── Modo noche ───────────────────────────────────────────────────────────
+   Se activa con data-theme='dark' (botón de la cabecera o panel de
+   Accesibilidad) o, si el visitante no eligió nada, con la preferencia del
+   sistema (ver layout.tsx). Contrastes (WCAG) sobre #202124: texto principal
+   14.3:1, cuerpo 11.4:1, atenuado 8.6:1, rojo de texto 6.5:1. */
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --color-page: #17181a;
+  --color-surface: #2b2c30;
+  --color-ink: #f5f1e9;
+  --color-body: #d9d9d9;
+  --color-muted: #bdbdbd;
+  --color-cream: #202124;
+  --color-sand: #202124;
+  --color-field: #9a9a9a;      /* borde de campos: 5.0:1 */
+  --color-line: #595959;       /* decorativo */
+  --color-red-tint: #3a1d24;
+  --color-error-tint: #3a1d24;
+  --color-charcoal: #0f1012;   /* cabeceras de ventanas, hero: siempre oscuros */
+  --color-brand: #ff7a8c;      /* texto y enlaces rojos: 6.5:1 */
+  --color-brand-dark: #ffb3be;
+  --color-error: #ff9aa8;
+  --color-success: #5fd39a;
+  --color-accent: #ffa07a;
+}
+html[data-theme='dark'][data-palette='protanopia'],
+html[data-theme='dark'][data-palette='deuteranopia'] {
+  --color-brand: #7ab8f5;      /* 7.7:1 */
+  --color-brand-dark: #a8d0f8;
+  --color-accent: #f0a860;
+  --color-success: #7ab8f5;
+  --color-error: #ffa07a;
+  --color-error-tint: #3a2616;
+  --color-red-tint: #1c2a3a;
+}
+html[data-theme='dark'][data-palette='tritanopia'] {
+  --color-accent: #4fd1d5;     /* 8.8:1 */
+  --color-success: #4fd1d5;
+}
+/* Noche + alto contraste: blanco sobre negro */
+html[data-theme='dark'][data-contrast='high'] {
+  --color-page: #000000;
+  --color-surface: #000000;
+  --color-cream: #000000;
+  --color-sand: #000000;
+  --color-ink: #ffffff;
+  --color-body: #ffffff;
+  --color-muted: #ffffff;
+  --color-field: #ffffff;
+  --color-line: #ffffff;
+  --color-charcoal: #000000;
+}
+/* El logo del encabezado es negro sobre blanco: en noche se invierte */
+html[data-theme='dark'] .logo-header { filter: invert(1); mix-blend-mode: screen; }
+
+
+/* Botón "Ver Menú" del inicio: crema en modo claro, oscuro con dorado en
+   modo noche (valores fijos, no dependen de las paletas de daltonismo).
+   Contrastes: #6b4700 sobre crema 7.4:1 · #d4a017 sobre #0f1012 ≈ 8:1. */
+.hero-cta { background: rgb(245 241 233 / 0.9); color: #6b4700; border-color: #d4a017; }
+.hero-cta:hover { background: #ffffff; }
+html[data-theme='dark'] .hero-cta { background: rgb(15 16 18 / 0.85); color: #d4a017; border-color: #d4a017; }
+html[data-theme='dark'] .hero-cta:hover { background: #0f1012; }
 
 /* Escala de grises: útil para comprobar que nada depende del color y para
    quien prefiere una vista sin color. */
@@ -144,7 +219,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
-  background: #fff;
+  background: var(--color-page);
   color: var(--color-ink);
   line-height: 1.5;
 }
@@ -154,7 +229,7 @@ body {
 :focus-visible {
   outline: 3px solid var(--color-ink);
   outline-offset: 3px;
-  box-shadow: 0 0 0 6px #fff;
+  box-shadow: 0 0 0 6px var(--color-page);
 }
 .on-dark :focus-visible {
   outline-color: var(--color-gold-light);
@@ -174,8 +249,9 @@ main p a, footer p a, .prose a { text-decoration: underline; text-underline-offs
   z-index: 100;
   padding: 0.75rem 1.25rem;
   border-radius: 0.75rem;
-  background: var(--color-ink);
+  background: var(--color-charcoal);
   color: #fff;
+  border: 2px solid #fff;
   font-weight: 700;
   transition: top 0.15s;
 }

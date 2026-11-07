@@ -13,9 +13,10 @@ type Prefs = {
   legible: 'off' | 'on'
   motion: 'normal' | 'reduce'
   palette: 'normal' | 'protanopia' | 'deuteranopia' | 'tritanopia'
+  theme: 'light' | 'dark'
 }
 
-const DEFAULTS: Prefs = { contrast: 'normal', grayscale: 'off', text: 'normal', legible: 'off', motion: 'normal', palette: 'normal' }
+const DEFAULTS: Prefs = { contrast: 'normal', grayscale: 'off', text: 'normal', legible: 'off', motion: 'normal', palette: 'normal', theme: 'light' }
 const KEYS = Object.keys(DEFAULTS) as (keyof Prefs)[]
 
 /** Lee el estado actual desde los atributos data-* de <html>. */
@@ -27,6 +28,7 @@ const read = (): Prefs => {
     text: d.text === 'large' || d.text === 'xlarge' ? d.text : 'normal',
     legible: d.legible === 'on' ? 'on' : 'off',
     motion: d.motion === 'reduce' ? 'reduce' : 'normal',
+    theme: d.theme === 'dark' ? 'dark' : 'light',
     palette: d.palette === 'protanopia' || d.palette === 'deuteranopia' || d.palette === 'tritanopia' ? d.palette : 'normal',
   }
 }
@@ -100,6 +102,12 @@ function PreferencesForm({ onClose }: { onClose: () => void }) {
             hint="Muestra la página sin color. Todo el contenido sigue siendo comprensible porque usa iconos, textos y formas."
             onChange={v => update({ grayscale: v ? 'on' : 'off' })}
           />
+        </fieldset>
+
+        <fieldset>
+          <legend className="mb-1 font-bold text-ink">Apariencia</legend>
+          <Radio name="theme" value="light" label="Modo claro" checked={prefs.theme === 'light'} onChange={() => update({ theme: 'light' })} />
+          <Radio name="theme" value="dark" label="Modo noche" checked={prefs.theme === 'dark'} onChange={() => update({ theme: 'dark' })} />
         </fieldset>
 
         <fieldset>

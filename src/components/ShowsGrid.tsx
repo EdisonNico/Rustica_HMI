@@ -16,17 +16,17 @@ export function ShowsGrid() {
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {shows.map(show => (
           <li key={`${show.artist}-${show.date}`}>
-            <article className="group h-full overflow-hidden rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(196,30,58,0.14)]">
+            <article className="group h-full overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(196,30,58,0.14)]">
               <Poster src={SHOW_BOARDS[show.sheet]} size={show.size} position={show.position} />
               <div className="p-4">
                 <h2 className="mb-3 font-display text-lg font-bold text-ink">{show.artist}</h2>
                 <dl className="mb-4 space-y-2">
                   <div>
-                    <dt className="text-xs font-bold uppercase tracking-wider text-red">Fecha</dt>
+                    <dt className="text-xs font-bold uppercase tracking-wider text-brand">Fecha</dt>
                     <dd className="text-sm text-muted">{show.date}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs font-bold uppercase tracking-wider text-red">Local</dt>
+                    <dt className="text-xs font-bold uppercase tracking-wider text-brand">Local</dt>
                     <dd className="text-sm text-muted">{show.location}</dd>
                   </div>
                 </dl>
@@ -52,7 +52,7 @@ export function ShowsGrid() {
               <div className="absolute right-3 top-3 rounded-full bg-sand text-ink [&_button]:text-ink">
                 <CloseButton onClose={() => setSelected(null)} label="Cerrar detalles" />
               </div>
-              <p className="mb-2 text-xs font-bold uppercase tracking-widest text-red">Show en vivo</p>
+              <p className="mb-2 text-xs font-bold uppercase tracking-widest text-brand">Show en vivo</p>
               <h2 id={TITLE_ID} className="mb-5 pr-12 font-display text-2xl font-bold text-ink">
                 {selected.artist}
               </h2>

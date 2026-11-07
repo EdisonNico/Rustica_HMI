@@ -18,8 +18,8 @@ export function MenuExplorer() {
   const currentCategory = categories.find(item => item.value === category)!
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="on-dark bg-ink px-6 py-10">
+    <div className="min-h-screen bg-surface">
+      <div className="on-dark bg-charcoal px-6 py-10">
         <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
             <p className="mb-1 text-xs uppercase tracking-widest text-gold">Explora nuestra carta</p>
@@ -41,7 +41,7 @@ export function MenuExplorer() {
                 <Chevron open={open} />
               </>
             )}
-            panelClassName="absolute right-0 z-20 mt-2 max-h-[min(460px,65vh)] w-72 overflow-y-auto rounded-xl border border-line bg-white text-ink shadow-2xl"
+            panelClassName="absolute right-0 z-20 mt-2 max-h-[min(460px,65vh)] w-72 overflow-y-auto rounded-xl border border-line bg-surface text-ink shadow-2xl"
           >
             {close =>
               branchGroups.map(group => (
@@ -60,7 +60,7 @@ export function MenuExplorer() {
                           setBranch(item.value)
                           close()
                         }}
-                        className={`${itemBase} ${selected ? 'bg-red-tint font-semibold text-red' : 'hover:bg-cream'}`}
+                        className={`${itemBase} ${selected ? 'bg-red-tint font-semibold text-brand' : 'hover:bg-cream'}`}
                       >
                         <span aria-hidden="true" className="w-4">
                           {selected ? '✓' : ''}
@@ -84,7 +84,7 @@ export function MenuExplorer() {
             panelId="menu-categories"
             triggerClassName={open =>
               `flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border-[1.5px] border-red px-4 py-2.5 text-left text-sm font-bold ${
-                open ? 'bg-red text-white shadow-[0_8px_20px_rgba(196,30,58,0.18)]' : 'bg-white text-ink'
+                open ? 'bg-red text-white shadow-[0_8px_20px_rgba(196,30,58,0.18)]' : 'bg-surface text-ink'
               }`
             }
             trigger={open => (
@@ -101,7 +101,7 @@ export function MenuExplorer() {
                 <Chevron open={open} />
               </>
             )}
-            panelClassName="absolute inset-x-0 z-20 mt-3 grid max-h-[min(520px,65vh)] grid-cols-1 gap-2 overflow-y-auto rounded-2xl border border-line bg-white p-3 shadow-2xl sm:grid-cols-2 sm:p-4 lg:grid-cols-3"
+            panelClassName="absolute inset-x-0 z-20 mt-3 grid max-h-[min(520px,65vh)] grid-cols-1 gap-2 overflow-y-auto rounded-2xl border border-line bg-surface p-3 shadow-2xl sm:grid-cols-2 sm:p-4 lg:grid-cols-3"
           >
             {close =>
               categories.map(cat => {
@@ -116,7 +116,7 @@ export function MenuExplorer() {
                       close()
                     }}
                     className={`min-h-11 cursor-pointer rounded-xl border px-4 py-3 text-left text-sm font-semibold ${
-                      selected ? 'border-red bg-red text-white' : 'border-[#eee3d6] bg-cream text-ink hover:border-red'
+                      selected ? 'border-red bg-red text-white' : 'border-line bg-cream text-ink hover:border-red'
                     }`}
                   >
                     {selected && <span aria-hidden="true">✓ </span>}

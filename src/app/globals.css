@@ -51,6 +51,20 @@ html[data-contrast='high'] {
   }
 }
 
+/* Paleta para daltonismo (rojo y verde): la marca pasa de rojo a azul.
+   Blanco sobre #0b5cad = 6.67:1 · #0b5cad sobre blanco = 6.67:1 */
+html[data-palette='daltonismo'] {
+  --color-red: #0b5cad;
+  --color-red-dark: #084482;
+  --color-red-tint: #eaf2fb;
+}
+/* Si además está el alto contraste, se usan los azules más oscuros */
+html[data-palette='daltonismo'][data-contrast='high'] {
+  --color-red: #084482;
+  --color-red-dark: #062f5c;
+  --color-red-tint: #eaf2fb;
+}
+
 /* Texto ampliado: todo el diseño usa rem, así que escala completo. */
 html[data-text='large'] { font-size: 125%; }
 html[data-text='xlarge'] { font-size: 150%; }

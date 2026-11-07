@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 }
 
 /** Aplica las preferencias guardadas antes de pintar la página (evita el parpadeo). */
-const prefsScript = `try{var p=JSON.parse(localStorage.getItem('rustica-prefs')||'{}'),d=document.documentElement;['contrast','text','motion'].forEach(function(k){if(p[k]&&p[k]!=='normal')d.dataset[k]=p[k]})}catch(e){}`
+const prefsScript = `try{var p=JSON.parse(localStorage.getItem('rustica-prefs')||'{}'),d=document.documentElement;['contrast','text','motion','palette'].forEach(function(k){if(p[k]&&p[k]!=='normal')d.dataset[k]=p[k]})}catch(e){}`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

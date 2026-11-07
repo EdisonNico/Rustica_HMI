@@ -56,7 +56,7 @@ export function CarouselSection({ title, href, linkLabel, noun, children }: Prop
           </div>
         </div>
       </div>
-      <ul ref={track} className="no-scrollbar -m-1 flex snap-x snap-mandatory gap-5 overflow-x-auto p-1 pb-3">
+      <ul ref={track} className="no-scrollbar -m-3 flex snap-x snap-mandatory gap-5 overflow-x-auto p-3 pb-5">
         {children}
       </ul>
     </section>

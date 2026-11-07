@@ -185,6 +185,7 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
         <Field fieldId={id('name')} label="Nombre completo" error={errors.name}>
           <input
             ref={nameRef}
+            data-autofocus
             id={id('name')}
             name="name"
             type="text"

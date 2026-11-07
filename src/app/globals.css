@@ -217,6 +217,11 @@ html[data-legible='on'] li { line-height: 1.75; max-width: 75ch; }
 /* ── Base ─────────────────────────────────────────────────────────────── */
 html { scroll-behavior: smooth; }
 
+/* Con la cabecera fija (68 px) y la barra de categorías fija del menú, el
+   navegador no debe dejar el elemento enfocado tapado al avanzar con Tab
+   (WCAG 2.4.11 Foco no oculto). */
+html { scroll-padding-top: 9rem; }
+
 body {
   font-family: var(--font-body);
   background: var(--color-page);

@@ -1,59 +1,143 @@
 @import 'tailwindcss';
 
 /* ── Tokens de diseño ─────────────────────────────────────────────────────
-   Los colores conservan la identidad de Rústica. Los que se usan como texto
-   sobre fondo claro fueron verificados con la fórmula WCAG 2.1 (≥ 4.5:1) y
-   los bordes de controles con ≥ 3:1 (criterios 1.4.3 y 1.4.11). */
+   Paleta base accesible (verificada con la fórmula WCAG 2.2):
+   ink #202124 sobre blanco 16.1:1 · gris oscuro #595959 sobre blanco 7.0:1
+   y sobre crema 6.2:1 · rojo de marca #c41e3a sobre blanco 5.8:1.
+   Rojo, dorado y verde son DECORATIVOS o refuerzan; nunca son el único
+   medio de comunicar algo (siempre van con icono + texto, ver StatusMessage). */
 @theme {
   --font-display: var(--font-playfair), Georgia, serif;
   --font-body: var(--font-source), system-ui, sans-serif;
 
-  --color-ink: #1e1e1e;
-  --color-body: #514a43; /* 8.2:1 sobre crema */
-  --color-muted: #6b6055; /* 5.8:1 sobre crema (antes #999: 2.85:1) */
-  --color-red: #c41e3a; /* 5.8:1 sobre blanco */
+  --color-white: #ffffff;
+  --color-ink: #202124;        /* negro suave */
+  --color-body: #595959;       /* gris oscuro */
+  --color-muted: #595959;
+  --color-line: #d9d9d9;       /* gris claro: SOLO bordes decorativos */
+  --color-field: #595959;      /* borde de controles: 7:1 (WCAG 1.4.11 pide 3:1) */
+  --color-cream: #f5f1e9;      /* crema */
+  --color-sand: #f5f1e9;
+
+  --color-red: #c41e3a;        /* identidad de marca */
   --color-red-dark: #9e1830;
   --color-red-tint: #fff0f2;
-  --color-gold: #d4a017; /* solo sobre fondos oscuros (7.0:1 sobre #1e1e1e) */
+  --color-gold: #d4a017;       /* solo sobre fondos oscuros */
   --color-gold-light: #f0c040;
-  --color-charcoal: #2c2c2c;
-  --color-cream: #fdf8f0;
-  --color-sand: #f5f0e8;
-  --color-line: #e8e0d5; /* borde decorativo de tarjetas */
-  --color-field: #767676; /* borde de campos: 4.5:1 sobre blanco (antes #ddd: 1.4:1) */
-  --color-footer: #303442;
-  --color-wa: #0e7c46; /* WhatsApp: blanco sobre este verde = 5.3:1 (antes 2.6:1) */
+  --color-charcoal: #202124;
+  --color-footer: #202124;
+  --color-wa: #0e7c46;         /* blanco sobre este verde = 5.3:1 */
+
+  /* Estados: siempre se muestran con icono + texto (StatusMessage). */
+  --color-success: #0e7c46;
+  --color-error: #9e1830;
+  --color-error-tint: #fff0f2;
+  --color-accent: #9e1830;     /* acento secundario (etiquetas, resaltes) */
 }
 
-/* ── Preferencias de visualización ────────────────────────────────────────
-   Se activan con el panel "Accesibilidad" o automáticamente si el sistema
-   operativo pide más contraste (prefers-contrast: more). */
+/* ── Preferencias del visitante (panel "Accesibilidad") ──────────────────
+   Se activan con atributos data-* en <html>. Una sola fuente de verdad:
+   PreferencesDialog.tsx escribe, layout.tsx las restaura antes de pintar. */
+
+/* Alto contraste (también si el sistema lo pide: prefers-contrast) */
 html[data-contrast='high'] {
-  --color-body: #1e1e1e;
-  --color-muted: #1e1e1e;
+  --color-body: #000000;
+  --color-muted: #000000;
+  --color-ink: #000000;
   --color-red: #9e1830;
   --color-red-dark: #7a0f22;
-  --color-line: #1e1e1e;
-  --color-field: #1e1e1e;
-  --color-footer: #1e1e1e;
+  --color-line: #202124;
+  --color-field: #000000;
+  --color-footer: #000000;
+  --color-charcoal: #000000;
   --color-wa: #0a5c33;
 }
 @media (prefers-contrast: more) {
   :root {
-    --color-body: #1e1e1e;
-    --color-muted: #1e1e1e;
+    --color-body: #000000;
+    --color-muted: #000000;
+    --color-ink: #000000;
     --color-red: #9e1830;
     --color-red-dark: #7a0f22;
-    --color-line: #1e1e1e;
-    --color-field: #1e1e1e;
-    --color-footer: #1e1e1e;
+    --color-line: #202124;
+    --color-field: #000000;
+    --color-footer: #000000;
     --color-wa: #0a5c33;
   }
 }
 
-/* Texto ampliado: todo el diseño usa rem, así que escala completo. */
+
+/* ── Paletas para daltonismo ──────────────────────────────────────────────
+   Se eligen en el panel. Cada una evita el par de colores que ese tipo de
+   daltonismo confunde. Verificadas con simulación (Machado 2009): en la
+   paleta estándar rojo/verde tienen una diferencia perceptual ΔE≈17-20
+   para protanopia y deuteranopia; en estas paletas, ΔE>89.
+   Aun así, el color nunca es el único indicador (iconos + texto + forma). */
+
+/* Protanopia y deuteranopia (no distinguen rojo de verde):
+   la marca pasa a azul, el acento a ocre oscuro y el error a naranja
+   oscuro. Éxito y error se diferencian por tono azul/naranja y por icono. */
+html[data-palette='protanopia'],
+html[data-palette='deuteranopia'] {
+  --color-red: #0b5cad;
+  --color-red-dark: #084482;
+  --color-red-tint: #eaf2fb;
+  --color-accent: #8a4b00;
+  --color-success: #0b5cad;
+  --color-error: #a33a00;
+  --color-error-tint: #fff3ea;
+  --color-wa: #0b5cad;
+  --color-gold: #f0c040;
+}
+
+/* Tritanopia (no distingue azul de amarillo): se conserva el rojo de la
+   marca (se percibe bien), se evita el azul/amarillo/dorado y se usa
+   verde azulado oscuro para éxito y rosa claro en lugar del dorado. */
+html[data-palette='tritanopia'] {
+  --color-accent: #00676b;
+  --color-success: #00676b;
+  --color-error: #c41e3a;
+  --color-wa: #00676b;
+  --color-gold: #ffb3c0;
+  --color-gold-light: #ffd6dc;
+}
+
+/* Combinadas con alto contraste usan versiones más oscuras */
+html[data-palette='protanopia'][data-contrast='high'],
+html[data-palette='deuteranopia'][data-contrast='high'] {
+  --color-red: #084482;
+  --color-red-dark: #062f5c;
+  --color-accent: #6b3a00;
+  --color-success: #084482;
+  --color-error: #7a2c00;
+  --color-wa: #084482;
+}
+html[data-palette='tritanopia'][data-contrast='high'] {
+  --color-accent: #004d50;
+  --color-success: #004d50;
+  --color-error: #9e1830;
+  --color-wa: #004d50;
+}
+
+/* Escala de grises: útil para comprobar que nada depende del color y para
+   quien prefiere una vista sin color. */
+html[data-grayscale='on'] { filter: grayscale(1); }
+
+/* Texto ampliado: el diseño usa rem, así que escala completo. */
 html[data-text='large'] { font-size: 125%; }
 html[data-text='xlarge'] { font-size: 150%; }
+
+/* Texto de mayor legibilidad (WCAG 1.4.12): fuente sencilla, más
+   interlineado y espaciado de letras/palabras. */
+html[data-legible='on'] body,
+html[data-legible='on'] body * {
+  font-family: system-ui, 'Segoe UI', Arial, sans-serif !important;
+  letter-spacing: 0.02em;
+  word-spacing: 0.08em;
+}
+html[data-legible='on'] body { line-height: 1.75; }
+html[data-legible='on'] p,
+html[data-legible='on'] li { line-height: 1.75; max-width: 75ch; }
 
 /* ── Base ─────────────────────────────────────────────────────────────── */
 html { scroll-behavior: smooth; }
@@ -65,15 +149,22 @@ body {
   line-height: 1.5;
 }
 
-/* Foco visible en TODOS los controles (2.4.7). En superficies oscuras se
-   invierte el color para mantener ≥ 3:1. */
+/* Foco visible en TODOS los controles (2.4.7 / 2.4.13). Anillo doble: el
+   oscuro y el claro se ven sobre cualquier fondo, claro u oscuro. */
 :focus-visible {
   outline: 3px solid var(--color-ink);
   outline-offset: 3px;
+  box-shadow: 0 0 0 6px #fff;
 }
-.on-dark :focus-visible { outline-color: var(--color-gold-light); }
+.on-dark :focus-visible {
+  outline-color: var(--color-gold-light);
+  box-shadow: 0 0 0 6px #202124;
+}
 
 ::placeholder { color: var(--color-muted); opacity: 1; }
+
+/* Los enlaces dentro de texto se subrayan: no dependen del color (1.4.1) */
+main p a, footer p a, .prose a { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Enlace "saltar al contenido" (2.4.1) */
 .skip-link {
@@ -90,17 +181,28 @@ body {
 }
 .skip-link:focus { top: 1rem; }
 
-/* ── Ventanas emergentes con <dialog> nativo ──────────────────────────────
-   El navegador aporta: foco atrapado, Esc para cerrar, fondo inerte y
-   retorno del foco al botón que abrió la ventana. */
+/* Objetivos táctiles mínimos (2.5.8) */
+button, [role='button'], summary, select, input[type='checkbox'], input[type='radio'] { min-height: 24px; }
+
+/* ── Ventanas emergentes con <dialog> nativo ───────────────────────────── */
 dialog.modal {
+  /* Tailwind (preflight) pone margin:0 a todo y anula el centrado nativo del
+     <dialog>; sin esto las ventanas quedan arriba a la izquierda. */
+  margin: auto;
   padding: 0;
   border: 0;
   background: transparent;
-  max-width: 100vw;
-  max-height: 100dvh;
+  /* Ancho cómodo: hasta 42rem (672 px) y 1rem de aire a cada lado en móvil */
+  width: min(calc(100vw - 2rem), 42rem);
+  max-width: none;
+  max-height: calc(100dvh - 2rem);
   overflow: visible;
   color: var(--color-ink);
+}
+/* El panel ocupa todo el ancho de la ventana (anula los max-w de size="sm") */
+dialog.modal > * {
+  width: 100%;
+  max-width: none !important;
 }
 dialog.modal::backdrop {
   background: rgb(0 0 0 / 0.6);
@@ -108,16 +210,16 @@ dialog.modal::backdrop {
 }
 body:has(dialog[open]) { overflow: hidden; }
 
-/* Barra de desplazamiento discreta (se mantiene del diseño original) */
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
-/* ── Movimiento reducido (vestibular, epilepsia, atención) ────────────── */
+/* ── Movimiento reducido ───────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
 }
@@ -127,5 +229,6 @@ html[data-motion='reduce'] *::before,
 html[data-motion='reduce'] *::after {
   transition-duration: 0.01ms !important;
   animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
   scroll-behavior: auto !important;
 }

@@ -14,8 +14,9 @@ export const metadata: Metadata = {
   description: 'Carta, promociones, shows en vivo y locales de Rústica Perú.',
 }
 
-/** Aplica las preferencias guardadas antes de pintar la página (evita el parpadeo). */
-const prefsScript = `try{var p=JSON.parse(localStorage.getItem('rustica-prefs')||'{}'),d=document.documentElement;['contrast','text','motion'].forEach(function(k){if(p[k]&&p[k]!=='normal')d.dataset[k]=p[k]})}catch(e){}`
+/** Restaura las preferencias guardadas antes de pintar (evita el parpadeo).
+ *  Las claves deben coincidir con PreferencesDialog.tsx. */
+const prefsScript = `try{var p=JSON.parse(localStorage.getItem('rustica-prefs')||'{}'),d=document.documentElement;['contrast','text','motion','grayscale','legible','palette'].forEach(function(k){if(p[k]&&p[k]!=='normal'&&p[k]!=='off')d.dataset[k]=p[k]})}catch(e){}`
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

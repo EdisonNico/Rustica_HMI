@@ -3,21 +3,31 @@
 import { useState } from 'react'
 import { Dialog, DialogHeader, DialogPanel } from './Dialog'
 import { Poster } from './ui'
-import { promotions, type Promotion } from '@/data/promotions'
-import { PROMOTIONS_BOARD } from '@/lib/boards'
+import { LiveNotice } from './LiveNotice'
+import { StatusMessage } from './StatusMessage'
+import { usePromotions } from '@/lib/useRemote'
+import type { PromotionView } from '@/lib/content'
 
 const TITLE_ID = 'promocion-titulo'
 
 export function PromotionsGrid() {
-  const [selected, setSelected] = useState<Promotion | null>(null)
+  const [selected, setSelected] = useState<PromotionView | null>(null)
+  const { data, status, reload } = usePromotions()
+  const promotions = data ?? []
 
   return (
     <>
+      <LiveNotice status={status} hasData={data !== null} what="las promociones" onRetry={reload} />
+      {data !== null && promotions.length === 0 && (
+        <div className="mx-auto max-w-2xl">
+          <StatusMessage kind="info">No hay promociones vigentes por ahora.</StatusMessage>
+        </div>
+      )}
       <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {promotions.map(promotion => (
-          <li key={promotion.title}>
+          <li key={promotion.key}>
             <article className="group h-full overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_3px_14px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(196,30,58,0.14)]">
-              <Poster src={PROMOTIONS_BOARD.src} size={PROMOTIONS_BOARD.size} position={promotion.position} />
+              <Poster src={promotion.image} />
               <div className="p-4">
                 <h2 className="mb-1 font-bold leading-snug text-ink">{promotion.title}</h2>
                 {promotion.price && <p className="mb-3 text-sm font-bold text-brand">{promotion.price}</p>}
@@ -54,7 +64,7 @@ export function PromotionsGrid() {
                   </p>
                 ))}
               </div>
-              {selected.terms && (
+              {selected.terms.length > 0 && (
                 <div className="mt-7 border-t border-line pt-6">
                   <h3 className="mb-3 font-bold text-ink">Términos y condiciones</h3>
                   <ul className="list-disc space-y-2 pl-5 text-sm leading-6 text-body">

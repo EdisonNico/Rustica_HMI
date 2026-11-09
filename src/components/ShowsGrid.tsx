@@ -3,27 +3,37 @@
 import { useState } from 'react'
 import { Dialog, DialogPanel, CloseButton } from './Dialog'
 import { Poster } from './ui'
-import { showDescriptions, shows, type Show } from '@/data/shows'
-import { SHOW_BOARDS } from '@/lib/boards'
+import { LiveNotice } from './LiveNotice'
+import { StatusMessage } from './StatusMessage'
+import { useShows } from '@/lib/useRemote'
+import type { ShowView } from '@/lib/content'
 
 const TITLE_ID = 'show-titulo'
 
 export function ShowsGrid() {
-  const [selected, setSelected] = useState<Show | null>(null)
+  const [selected, setSelected] = useState<ShowView | null>(null)
+  const { data, status, reload } = useShows()
+  const shows = data ?? []
 
   return (
     <>
+      <LiveNotice status={status} hasData={data !== null} what="los shows" onRetry={reload} />
+      {data !== null && shows.length === 0 && (
+        <div className="mx-auto max-w-2xl">
+          <StatusMessage kind="info">Pronto anunciaremos nuevos shows.</StatusMessage>
+        </div>
+      )}
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {shows.map(show => (
-          <li key={`${show.artist}-${show.date}`}>
+          <li key={show.key}>
             <article className="group h-full overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(196,30,58,0.14)]">
-              <Poster src={SHOW_BOARDS[show.sheet]} size={show.size} position={show.position} />
+              <Poster src={show.image} />
               <div className="p-4">
                 <h2 className="mb-3 font-display text-lg font-bold text-ink">{show.artist}</h2>
                 <dl className="mb-4 space-y-2">
                   <div>
                     <dt className="text-xs font-bold uppercase tracking-wider text-brand">Fecha</dt>
-                    <dd className="text-sm text-muted">{show.date}</dd>
+                    <dd className="text-sm text-muted">{show.dateLabel}</dd>
                   </div>
                   <div>
                     <dt className="text-xs font-bold uppercase tracking-wider text-brand">Local</dt>
@@ -33,7 +43,7 @@ export function ShowsGrid() {
                 <button
                   type="button"
                   onClick={() => setSelected(show)}
-                  aria-label={`Ver detalles del show de ${show.artist}, ${show.date}`}
+                  aria-label={`Ver detalles del show de ${show.artist}, ${show.dateLabel}`}
                   className="min-h-11 w-full cursor-pointer rounded-xl bg-red py-2.5 text-sm font-bold text-white transition-colors group-hover:bg-red-dark"
                 >
                   Ver detalles
@@ -47,7 +57,7 @@ export function ShowsGrid() {
       <Dialog open={selected !== null} onClose={() => setSelected(null)} labelledBy={TITLE_ID}>
         {selected && (
           <DialogPanel size="md">
-            <Poster src={SHOW_BOARDS[selected.sheet]} size={selected.size} position={selected.position} />
+            <Poster src={selected.image} />
             <div className="relative p-6">
               <div className="absolute right-3 top-3 rounded-full bg-sand text-ink [&_button]:text-ink">
                 <CloseButton onClose={() => setSelected(null)} label="Cerrar detalles" />
@@ -59,7 +69,9 @@ export function ShowsGrid() {
               <dl className="space-y-4">
                 <div>
                   <dt className="text-xs font-bold uppercase tracking-wider text-muted">Fecha</dt>
-                  <dd className="mt-1 font-semibold text-body">{selected.date} · 09:00 p. m.</dd>
+                  <dd className="mt-1 font-semibold text-body">{selected.dateLabel}
+                    {selected.timeLabel && ` · ${selected.timeLabel}`}
+                  </dd>
                 </div>
                 <div>
                   <dt className="text-xs font-bold uppercase tracking-wider text-muted">Local</dt>
@@ -67,7 +79,7 @@ export function ShowsGrid() {
                 </div>
               </dl>
               <div className="mt-6 space-y-3 border-t border-line pt-5">
-                {showDescriptions[`${selected.artist}|${selected.date}`]?.map(paragraph => (
+                {selected.description.map(paragraph => (
                   <p key={paragraph} className="text-sm leading-6 text-body">
                     {paragraph}
                   </p>

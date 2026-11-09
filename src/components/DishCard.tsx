@@ -1,19 +1,21 @@
-import type { Dish } from '@/data/menu'
+import type { DishView } from '@/lib/content'
 
-export function DishCard({ dish }: { dish: Dish }) {
+export function DishCard({ dish }: { dish: DishView }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_2px_12px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(196,30,58,0.15)]">
       <div className="relative h-[200px] overflow-hidden bg-cream">
         {/* Foto de ambientación: el nombre del plato ya está en el título, por eso alt vacío */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={dish.image}
-          alt=""
-          loading="lazy"
-          width={600}
-          height={400}
-          className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        {dish.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={dish.image}
+            alt=""
+            loading="lazy"
+            width={600}
+            height={400}
+            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
         {dish.badge && (
           <span className="absolute left-3 top-3 inline-block rounded-full bg-red px-2 py-0.5 text-xs font-semibold text-white">{dish.badge}</span>
         )}

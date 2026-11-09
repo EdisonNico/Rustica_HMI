@@ -196,6 +196,15 @@ export function DishForm({ item, token, refs, onUnauthorized, onSaved, onCancel,
 
 /* ───────── Shows ───────── */
 
+/** Fecha (AAAA-MM-DD) y hora (HH:MM) actuales en Lima. */
+function nowInLima() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(new Date())
+  const get = (t: string) => parts.find(x => x.type === t)?.value ?? '00'
+  return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}` }
+}
+
 export function ShowForm({ item, token, refs, onUnauthorized, onSaved, onCancel, titleId }: FormProps<AdminShow>) {
   const { errors, general, saving, summaryRef, submit } = useForm(onUnauthorized, onSaved)
   const [v, setV] = useState({
@@ -216,12 +225,19 @@ export function ShowForm({ item, token, refs, onUnauthorized, onSaved, onCancel,
     setV(prev => ({ ...prev, branchSlug: slug, location: !prev.location.trim() && branch ? `Rústica ${branch.name}` : prev.location }))
   }
 
+  const now = nowInLima()
+  // Solo se exige fecha futura si es un show nuevo o se cambió la fecha u hora
+  const changed = !item || v.date !== item.date || v.time !== (item.time?.slice(0, 5) ?? '')
+  const minDate = item && item.date < now.date ? undefined : now.date
+  const minTime = v.date === now.date && changed ? now.time : undefined
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     submit(
       collect({
         artist: required(v.artist),
-        date: required(v.date, 'Elige la fecha.'),
+        date: required(v.date, 'Elige la fecha.') ?? (changed && v.date < now.date ? 'La fecha no puede estar en el pasado.' : undefined),
+        time: minTime && v.time && v.time < minTime ? 'Esa hora ya pasó. Elige una hora posterior.' : undefined,
         location: required(v.location, 'Escribe el local, por ejemplo Rústica Costa Verde.'),
       }),
       () => {
@@ -250,8 +266,8 @@ export function ShowForm({ item, token, refs, onUnauthorized, onSaved, onCancel,
       summary={<ErrorSummary errors={errors} general={general} summaryRef={summaryRef} labels={{ artist: 'Artista', date: 'Fecha', location: 'Local', time: 'Hora', image: 'Afiche', description: 'Descripción' }} />}
     >
       <TextField name="artist" label="Artista" required value={v.artist} onChange={set('artist')} error={errors.artist} maxLength={160} />
-      <TextField name="date" type="date" label="Fecha" required value={v.date} onChange={set('date')} error={errors.date} />
-      <TextField name="time" type="time" label="Hora" value={v.time} onChange={set('time')} error={errors.time} />
+      <TextField name="date" type="date" label="Fecha" required min={minDate} hint="Solo fechas de hoy en adelante." value={v.date} onChange={set('date')} error={errors.date} />
+      <TextField name="time" type="time" label="Hora" min={minTime} value={v.time} onChange={set('time')} error={errors.time} />
       <SelectField
         name="branchSlug"
         label="Sede"
@@ -265,7 +281,7 @@ export function ShowForm({ item, token, refs, onUnauthorized, onSaved, onCancel,
       <ImageField
         name="image"
         label="Afiche"
-        hint="Mejor en vertical (proporción 4:5). JPG, PNG o WebP de hasta 5 MB."
+        hint="Vertical 4:5, por ejemplo 1080 × 1350 px. JPG, PNG o WebP de hasta 5 MB."
         token={token}
         folder="shows"
         value={v.image}

@@ -106,6 +106,6 @@ export const useMenu = (branch: string | null) =>
   useRemote(branch ? '/api/menu?branch=' + encodeURIComponent(branch) : null, (raw: ApiMenu) => toMenu(raw))
 
 export const useHome = () => useRemote('/api/home', (raw: ApiHome) => toHome(raw))
-export const useShows = () => useRemote('/api/shows', (raw: ApiShow[]) => raw.map(toShow))
+export const useShows = () => useRemote('/api/shows?upcoming=true', (raw: ApiShow[]) => raw.map(toShow))
 export const usePromotions = () => useRemote('/api/promotions', (raw: ApiPromotion[]) => raw.map(toPromotion))
 export const useNews = () => useRemote('/api/news', (raw: ApiNews[]) => raw.map(toNews))

@@ -49,15 +49,16 @@ const aria = (p: BaseProps) => ({
   'aria-required': p.required || undefined,
 })
 
-export function TextField({ type = 'text', value, onChange, maxLength, ...p }: BaseProps & {
+export function TextField({ type = 'text', value, onChange, maxLength, min, ...p }: BaseProps & {
   type?: 'text' | 'date' | 'time' | 'number'
   value: string
   onChange: (v: string) => void
   maxLength?: number
+  min?: string
 }) {
   return (
     <Wrapper {...p}>
-      <input {...aria(p)} type={type} value={value} maxLength={maxLength} onChange={e => onChange(e.target.value)} className={control} />
+      <input {...aria(p)} type={type} value={value} maxLength={maxLength} min={min} onChange={e => onChange(e.target.value)} className={control} />
     </Wrapper>
   )
 }

@@ -23,30 +23,28 @@ export function ShowsGrid() {
           <StatusMessage kind="info">Pronto anunciaremos nuevos shows.</StatusMessage>
         </div>
       )}
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <ul className="mx-auto grid max-w-5xl grid-cols-1 gap-4 lg:grid-cols-2">
         {shows.map(show => (
           <li key={show.key}>
-            <article className="group h-full overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(196,30,58,0.14)]">
-              <Poster src={show.image} />
-              <div className="p-4">
-                <h2 className="mb-3 font-display text-lg font-bold text-ink">{show.artist}</h2>
-                <dl className="mb-4 space-y-2">
-                  <div>
-                    <dt className="text-xs font-bold uppercase tracking-wider text-brand">Fecha</dt>
-                    <dd className="text-sm text-muted">{show.dateLabel}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs font-bold uppercase tracking-wider text-brand">Local</dt>
-                    <dd className="text-sm text-muted">{show.location}</dd>
-                  </div>
-                </dl>
+            <article className="flex h-full overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+              <div className="w-28 shrink-0 sm:w-36">
+                <Poster src={show.image} />
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col p-4">
+                <h2 className="font-display text-lg font-bold leading-tight text-ink">{show.artist}</h2>
+                <p className="mt-1 text-sm font-semibold text-body">
+                  {show.dateLabel}
+                  {show.timeLabel && ` · ${show.timeLabel}`}
+                </p>
+                <p className="text-sm text-muted">{show.location}</p>
+                {show.description.length > 0 && <p className="mt-2 line-clamp-3 text-sm leading-6 text-body">{show.description.join(' ')}</p>}
                 <button
                   type="button"
                   onClick={() => setSelected(show)}
-                  aria-label={`Ver detalles del show de ${show.artist}, ${show.dateLabel}`}
-                  className="min-h-11 w-full cursor-pointer rounded-xl bg-red py-2.5 text-sm font-bold text-white transition-colors group-hover:bg-red-dark"
+                  aria-label={`Ver más del show de ${show.artist}, ${show.dateLabel}`}
+                  className="mt-auto min-h-11 cursor-pointer self-end pt-2 text-sm font-bold text-brand underline-offset-4 hover:underline"
                 >
-                  Ver detalles
+                  Ver más
                 </button>
               </div>
             </article>

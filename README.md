@@ -69,6 +69,9 @@ npm run lint     # revisa tipos (ejecuta antes "npm run dev" o "build" para que 
 accesos
 http://localhost:3000 y el admin es http://localhost:3000/admin/.
 En producción: https://TU-SITIO.onrender.com y https://TU-SITIO.onrender.com/admin/. Todavía no tengo la dirección real del Static Site, cámbiala por la que te dé Render.
+
+Puebas local
+.env.local: NEXT_PUBLIC_API_URL=http://localhost:8080
 ```
 
 Requiere Node.js 20.9 o superior.

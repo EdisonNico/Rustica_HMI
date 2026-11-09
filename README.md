@@ -65,6 +65,10 @@ npm install
 npm run dev      # desarrollo en http://localhost:3000
 npm run build    # genera la carpeta out/
 npm run lint     # revisa tipos (ejecuta antes "npm run dev" o "build" para que Next genere next-env.d.ts)
+
+accesos
+http://localhost:3000 y el admin es http://localhost:3000/admin/.
+En producción: https://TU-SITIO.onrender.com y https://TU-SITIO.onrender.com/admin/. Todavía no tengo la dirección real del Static Site, cámbiala por la que te dé Render.
 ```
 
 Requiere Node.js 20.9 o superior.

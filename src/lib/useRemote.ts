@@ -34,7 +34,7 @@ const memory = new Map<string, { at: number; raw: unknown }>()
 function readStore(path: string): { at: number; raw: unknown } | null {
   try {
     const value = JSON.parse(localStorage.getItem(PREFIX + path) ?? 'null')
-    return value && typeof value.at === 'number' && Date.now() - value.at < STORE_MS ? value : null
+    return value && typeof value.at === 'number' && value.raw != null && Date.now() - value.at < STORE_MS ? value : null
   } catch {
     return null
   }
@@ -70,9 +70,24 @@ function useRemote<T, R>(path: string | null, map: (raw: R) => T): Remote<T> {
       setState({ data: null, status: 'error' })
       return
     }
-    const cached = attempt === 0 ? (memory.get(path) ?? readStore(path)) : null
+    let cached = attempt === 0 ? (memory.get(path) ?? readStore(path)) : null
+    let cachedData: T | null = null
     if (cached) {
-      setState({ data: mapRef.current(cached.raw as R), status: 'live' })
+      try {
+        cachedData = mapRef.current(cached.raw as R)
+      } catch {
+        // Copia guardada dañada o de una versión anterior: se descarta y se pide de nuevo
+        memory.delete(path)
+        try {
+          localStorage.removeItem(PREFIX + path)
+        } catch {
+          /* sin almacenamiento */
+        }
+        cached = null
+      }
+    }
+    if (cached && cachedData !== null) {
+      setState({ data: cachedData, status: 'live' })
       if (Date.now() - cached.at < FRESH_MS) return
     } else {
       setState(prev => ({ data: prev.data, status: 'loading' }))
@@ -80,6 +95,7 @@ function useRemote<T, R>(path: string | null, map: (raw: R) => T): Remote<T> {
     const controller = new AbortController()
     apiGet<R>(path, controller.signal)
       .then(raw => {
+        const data = mapRef.current(raw)
         const entry = { at: Date.now(), raw }
         memory.set(path, entry)
         try {
@@ -87,7 +103,7 @@ function useRemote<T, R>(path: string | null, map: (raw: R) => T): Remote<T> {
         } catch {
           /* sin almacenamiento */
         }
-        setState({ data: mapRef.current(raw), status: 'live' })
+        setState({ data, status: 'live' })
       })
       .catch(() => {
         if (!controller.signal.aborted) setState(prev => ({ data: prev.data, status: 'error' }))

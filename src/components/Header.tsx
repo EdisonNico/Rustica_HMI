@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import logo from '@/assets/logo.png'
 import { navEntries, socialLinks } from '@/data/nav'
@@ -22,7 +22,16 @@ export function Header() {
   const [prefsOpen, setPrefsOpen] = useState(false)
   const wrapper = useRef<HTMLElement>(null)
   const menuButton = useRef<HTMLButtonElement>(null)
+  const [scrolled, setScrolled] = useState(false)
   const closeMenu = useCallback(() => setMenuOpen(false), [])
+  // En Inicio la cabecera se funde con la portada (sin sombra) hasta que se baja la página
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 8)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [])
+  const blended = pathname === '/' && !scrolled
   useDismiss(menuOpen, closeMenu, wrapper, menuButton)
 
   const isActive = (href: string) => normalize(href) === pathname
@@ -32,7 +41,7 @@ export function Header() {
     }`
 
   return (
-    <header ref={wrapper} className="sticky top-0 z-40 border-b border-line bg-surface shadow-[0_2px_16px_rgba(0,0,0,0.1)]">
+    <header ref={wrapper} className={`sticky top-0 z-40 bg-surface transition-shadow ${blended ? '' : 'shadow-[0_2px_16px_rgba(0,0,0,0.1)]'}`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-3">
         <Link href="/" className="shrink-0 rounded-lg" aria-label="Rústica, ir al inicio">
           <Image src={logo} alt="" className="logo-header block h-11 w-auto" priority />

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { BrushEdge } from './BrushEdge'
 import hero from '@/assets/hero.webp'
 import { CarouselSection, HighlightCard } from '@/components/CarouselSection'
 import { LiveNotice } from '@/components/LiveNotice'
@@ -32,13 +33,15 @@ export function HomeContent() {
 
   return (
     <>
-      <div className="on-dark relative flex min-h-[580px] items-end justify-center overflow-hidden bg-charcoal text-center">
+      <div className="on-dark relative flex min-h-[560px] items-end md:h-[clamp(560px,42vw,860px)] justify-center overflow-hidden bg-charcoal text-center">
         {home?.heroUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={home.heroUrl} alt="" className="absolute inset-0 size-full object-cover object-top opacity-90" />
         ) : heroFailed ? (
           <Image src={hero} alt="" fill sizes="100vw" className="object-cover object-top opacity-90" />
         ) : null}
+        <BrushEdge position="top" className="text-surface" />
+        <BrushEdge position="bottom" className="text-red" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent from-40% to-[rgba(10,5,5,0.82)]" aria-hidden="true" />
         <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-14">
           <h1 className="sr-only">Rústica Shows. Con los mejores artistas en vivo</h1>

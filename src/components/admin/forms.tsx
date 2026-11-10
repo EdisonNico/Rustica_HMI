@@ -228,7 +228,7 @@ export function ShowForm({ item, token, refs, onUnauthorized, onSaved, onCancel,
   const now = nowInLima()
   // Solo se exige fecha futura si es un show nuevo o se cambió la fecha u hora
   const changed = !item || v.date !== item.date || v.time !== (item.time?.slice(0, 5) ?? '')
-  const minDate = item && item.date < now.date ? undefined : now.date
+  const minDate = now.date
   const minTime = v.date === now.date && changed ? now.time : undefined
 
   const onSubmit = (e: FormEvent) => {
@@ -317,11 +317,14 @@ export function PromotionForm({ item, token, onUnauthorized, onSaved, onCancel, 
   })
   const set = <K extends keyof typeof v>(key: K) => (value: (typeof v)[K]) => setV(prev => ({ ...prev, [key]: value }))
 
+  const today = nowInLima().date
+  const validChanged = !item || v.validUntil !== (item.validUntil ?? '')
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     submit(
       collect({
         title: required(v.title),
+        validUntil: v.validUntil && validChanged && v.validUntil < today ? 'La fecha no puede estar en el pasado.' : undefined,
         sortOrder: Number.isInteger(Number(v.sortOrder)) ? undefined : 'Escribe un número entero.',
       }),
       () => {
@@ -351,7 +354,7 @@ export function PromotionForm({ item, token, onUnauthorized, onSaved, onCancel, 
       onCancel={onCancel}
       saving={saving}
       onSubmit={onSubmit}
-      summary={<ErrorSummary errors={errors} general={general} summaryRef={summaryRef} labels={{ title: 'Título', sortOrder: 'Orden', image: 'Imagen' }} />}
+      summary={<ErrorSummary errors={errors} general={general} summaryRef={summaryRef} labels={{ title: 'Título', validUntil: 'Vigente hasta', sortOrder: 'Orden', image: 'Imagen' }} />}
     >
       <TextField name="title" label="Título" required value={v.title} onChange={set('title')} error={errors.title} maxLength={200} />
       <AreaField name="subtitle" label="Resumen" value={v.subtitle} onChange={set('subtitle')} rows={2} maxLength={500} error={errors.subtitle} />
@@ -372,7 +375,7 @@ export function PromotionForm({ item, token, onUnauthorized, onSaved, onCancel, 
       <CheckField name="featured" label="Mostrar en el Inicio" hint="Aparece en el carrusel de promociones de la página principal." checked={v.featured} onChange={set('featured')} />
       <TextField name="shortTitle" label="Título corto (Inicio)" hint="Opcional. Si lo dejas vacío se usa el título." value={v.shortTitle} onChange={set('shortTitle')} maxLength={160} error={errors.shortTitle} />
       <TextField name="shortSubtitle" label="Texto corto (Inicio)" hint="Opcional." value={v.shortSubtitle} onChange={set('shortSubtitle')} maxLength={200} error={errors.shortSubtitle} />
-      <TextField name="validUntil" type="date" label="Vigente hasta" hint="Opcional. Después de esta fecha deja de mostrarse." value={v.validUntil} onChange={set('validUntil')} error={errors.validUntil} />
+      <TextField name="validUntil" type="date" label="Vigente hasta" min={today} hint="Opcional. Solo fechas de hoy en adelante; después de esa fecha deja de mostrarse." value={v.validUntil} onChange={set('validUntil')} error={errors.validUntil} />
       <TextField name="sortOrder" type="number" label="Orden" hint="Los números menores aparecen primero." value={v.sortOrder} onChange={set('sortOrder')} error={errors.sortOrder} />
       <CheckField name="active" label="Visible en el sitio" checked={v.active} onChange={set('active')} />
     </Shell>
@@ -394,10 +397,13 @@ export function NewsForm({ item, token, onUnauthorized, onSaved, onCancel, title
   })
   const set = <K extends keyof typeof v>(key: K) => (value: (typeof v)[K]) => setV(prev => ({ ...prev, [key]: value }))
 
+  const today = nowInLima().date
+  const dateChanged = !item || v.date !== (item.date ?? '')
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     submit(
       collect({
+        date: v.date && dateChanged && v.date < today ? 'La fecha no puede estar en el pasado.' : undefined,
         category: required(v.category, 'Escribe una categoría, por ejemplo Eventos.'),
         title: required(v.title),
         excerpt: required(v.excerpt, 'Escribe un resumen de la noticia.'),
@@ -420,7 +426,7 @@ export function NewsForm({ item, token, onUnauthorized, onSaved, onCancel, title
     >
       <TextField name="title" label="Título" required value={v.title} onChange={set('title')} error={errors.title} maxLength={200} />
       <TextField name="category" label="Categoría" required hint="Por ejemplo Eventos, Menú o Nuevos locales." value={v.category} onChange={set('category')} error={errors.category} maxLength={60} />
-      <TextField name="date" type="date" label="Fecha" value={v.date} onChange={set('date')} error={errors.date} />
+      <TextField name="date" type="date" label="Fecha" min={today} hint="Solo fechas de hoy en adelante." value={v.date} onChange={set('date')} error={errors.date} />
       <AreaField name="excerpt" label="Resumen" required value={v.excerpt} onChange={set('excerpt')} rows={4} maxLength={800} error={errors.excerpt} />
       <ImageField
         name="image"

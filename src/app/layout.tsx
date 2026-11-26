@@ -5,6 +5,8 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { ReservationProvider } from '@/components/ReservationProvider'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { VoiceReader } from '@/components/VoiceReader'
+import { BottomNav } from '@/components/BottomNav'
 
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', display: 'swap' })
 const source = Source_Sans_3({ subsets: ['latin'], variable: '--font-source', display: 'swap' })
@@ -24,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: prefsScript }} />
       </head>
-      <body className={`${playfair.variable} ${source.variable}`}>
+      <body className={`${playfair.variable} ${source.variable} max-lg:pb-[calc(4.5rem+env(safe-area-inset-bottom))]`}>
         <a href="#contenido" className="skip-link">
           Saltar al contenido
         </a>
@@ -35,6 +37,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <Footer />
           <WhatsAppButton />
+          <VoiceReader />
+          <BottomNav />
         </ReservationProvider>
       </body>
     </html>

@@ -291,6 +291,22 @@ dialog.modal::backdrop {
 }
 body:has(dialog[open]) { overflow: hidden; }
 
+/* Hoja inferior (celular): la ventana sube desde abajo, al alcance del pulgar */
+@media (max-width: 639px) {
+  dialog.modal.sheet {
+    margin: auto 0 0 0;
+    width: 100vw;
+    max-height: 92dvh;
+    transition: transform 0.15s ease-out;
+    animation: sheet-up 0.25s ease-out;
+  }
+  dialog.modal.sheet > * {
+    max-height: 92dvh !important;
+    border-radius: 1.25rem 1.25rem 0 0 !important;
+  }
+}
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 

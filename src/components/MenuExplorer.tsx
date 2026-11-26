@@ -1,21 +1,38 @@
 'use client'
 
 import { useState } from 'react'
+import { useSwipe } from '@/lib/useSwipe'
 import { Dropdown } from './Dropdown'
 import { DishCard } from './DishCard'
 import { Chevron } from './Icons'
-import { categories, dishes, type MenuCategory } from '@/data/menu'
-import { branchGroups, branches } from '@/data/locations'
+import { LiveNotice } from './LiveNotice'
+import { StatusMessage } from './StatusMessage'
+import { useBranches, useMenu } from '@/lib/useRemote'
 
 const itemBase = 'flex min-h-11 w-full cursor-pointer items-center gap-2 px-4 py-3 text-left text-sm'
 
 export function MenuExplorer() {
   const [branch, setBranch] = useState('barranco')
-  const [category, setCategory] = useState<MenuCategory>('menus')
+  const [category, setCategory] = useState('menus')
 
-  const filtered = dishes.filter(dish => dish.category === category)
-  const currentBranch = branches.find(item => item.value === branch)!
-  const currentCategory = categories.find(item => item.value === category)!
+  const { data: branchGroups, status: branchStatus, reload: reloadBranches } = useBranches()
+  const branches = (branchGroups ?? []).flatMap(group => group.branches)
+  const currentBranch = branches.find(item => item.value === branch) ?? branches[0]
+  const menu = useMenu(currentBranch?.value ?? null)
+  const categories = menu.data?.categories ?? []
+  const dishes = menu.data?.dishes ?? []
+  const loading = menu.status === 'loading'
+  // Si la sede no vende la categoría elegida, se muestra la primera que sí tenga platos
+  const currentCategory = categories.find(item => item.value === category) ?? categories[0]
+  const filtered = currentCategory ? dishes.filter(dish => dish.category === currentCategory.value) : []
+
+  const index = currentCategory ? categories.findIndex(item => item.value === currentCategory.value) : -1
+  const prev = index > 0 ? categories[index - 1] : null
+  const next = index >= 0 && index < categories.length - 1 ? categories[index + 1] : null
+  const swipe = useSwipe(
+    () => next && setCategory(next.value),
+    () => prev && setCategory(prev.value),
+  )
 
   return (
     <div className="min-h-screen bg-surface">
@@ -36,7 +53,7 @@ export function MenuExplorer() {
                 <span aria-hidden="true">📍</span>
                 <span>
                   <span className="sr-only">Local: </span>
-                  {currentBranch.label}
+                  {currentBranch?.label ?? 'Cargando…'}
                 </span>
                 <Chevron open={open} />
               </>
@@ -44,7 +61,7 @@ export function MenuExplorer() {
             panelClassName="absolute right-0 z-20 mt-2 max-h-[min(460px,65vh)] w-72 overflow-y-auto rounded-xl border border-line bg-surface text-ink shadow-2xl"
           >
             {close =>
-              branchGroups.map(group => (
+              (branchGroups ?? []).map(group => (
                 <div key={group.label} role="group" aria-label={group.label}>
                   <p aria-hidden="true" className="sticky top-0 bg-sand px-4 py-2 text-xs font-bold uppercase tracking-widest text-muted">
                     {group.label}
@@ -96,7 +113,7 @@ export function MenuExplorer() {
                 </span>
                 <span>
                   <span className="block text-xs uppercase tracking-widest">Categorías</span>
-                  <span className="block">{currentCategory.label}</span>
+                  <span className="block">{currentCategory?.label ?? 'Sin categorías'}</span>
                 </span>
                 <Chevron open={open} />
               </>
@@ -105,7 +122,7 @@ export function MenuExplorer() {
           >
             {close =>
               categories.map(cat => {
-                const selected = cat.value === category
+                const selected = cat.value === currentCategory?.value
                 return (
                   <button
                     key={cat.value}
@@ -130,21 +147,63 @@ export function MenuExplorer() {
       </div>
 
       <div className="mx-auto max-w-5xl px-6 py-10">
-        <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="mb-1 font-display text-2xl font-bold text-ink">{currentCategory.label}</h2>
-            <p className="max-w-2xl text-sm text-muted">{currentCategory.description}</p>
+        <LiveNotice
+          status={branchStatus === 'error' && !branchGroups ? 'error' : menu.status}
+          hasData={menu.data !== null}
+          what="la carta"
+          onRetry={branchStatus === 'error' && !branchGroups ? reloadBranches : menu.reload}
+        />
+        {menu.data !== null && categories.length === 0 ? (
+          <div className="mt-4">
+            <StatusMessage kind="info">Esta sede todavía no tiene platos publicados. Prueba con otro local.</StatusMessage>
           </div>
-          {/* role="status": el lector anuncia el cambio de categoría o de local */}
-          <p role="status" className="text-sm text-muted">
-            {filtered.length} opciones · Local {currentBranch.label}
-          </p>
-        </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map(dish => (
-            <DishCard key={dish.id} dish={dish} />
-          ))}
-        </div>
+        ) : (
+          <>
+            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="mb-1 font-display text-2xl font-bold text-ink">{currentCategory?.label}</h2>
+                <p className="max-w-2xl text-sm text-muted">{currentCategory?.description}</p>
+              </div>
+              {/* role="status": el lector anuncia el cambio de categoría o de local */}
+              <p role="status" className="text-sm text-muted">
+                {loading ? 'Cargando…' : `${filtered.length} opciones · Local ${currentBranch?.label}`}
+              </p>
+            </div>
+            <div {...swipe} aria-busy={loading} className={`grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 ${loading ? 'opacity-60' : ''}`}>
+              {filtered.map(dish => (
+                <DishCard key={dish.id} dish={dish} />
+              ))}
+            </div>
+            {(prev || next) && (
+              <nav aria-label="Cambiar de categoría" className="mt-8 grid grid-cols-2 gap-3">
+                {prev ? (
+                  <button
+                    type="button"
+                    onClick={() => setCategory(prev.value)}
+                    className="min-h-12 cursor-pointer rounded-xl border-[1.5px] border-red bg-surface px-4 py-3 text-left text-sm font-semibold text-ink"
+                  >
+                    <span aria-hidden="true">← </span>
+                    <span className="block text-xs uppercase tracking-widest text-muted">Anterior</span>
+                    {prev.label}
+                  </button>
+                ) : (
+                  <span />
+                )}
+                {next ? (
+                  <button
+                    type="button"
+                    onClick={() => setCategory(next.value)}
+                    className="col-start-2 min-h-12 cursor-pointer rounded-xl bg-red px-4 py-3 text-right text-sm font-semibold text-white"
+                  >
+                    <span className="block text-xs uppercase tracking-widest opacity-80">Siguiente →</span>
+                    {next.label}
+                  </button>
+                ) : null}
+              </nav>
+            )}
+            <p className="mt-3 text-center text-xs text-muted sm:hidden">Desliza a los lados para cambiar de categoría</p>
+          </>
+        )}
       </div>
     </div>
   )

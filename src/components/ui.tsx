@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react'
 
-/** Afiche recortado de una hoja de afiches. Decorativo: el texto está en la tarjeta. */
-export function Poster({ src, size, position }: { src: string; size: string; position: string }) {
+/** Afiche subido desde el panel. Decorativo: el texto está en la tarjeta. */
+export function Poster({ src }: { src: string | null }) {
+  const frame = 'block aspect-[269/336] w-full'
+  if (!src) return <span aria-hidden="true" className={`${frame} bg-cream`} />
   return (
-    <span
-      aria-hidden="true"
-      className="block aspect-[269/336] w-full bg-no-repeat"
-      style={{ backgroundImage: `url(${src})`, backgroundSize: size, backgroundPosition: position }}
-    />
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt="" aria-hidden="true" loading="lazy" width={538} height={672} className={`${frame} object-cover`} />
   )
 }
 

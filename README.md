@@ -1,242 +1,208 @@
 # Rústica Perú · Sitio web accesible (Next.js)
 
-## Introducción
+Sitio web de **Rústica Perú**: carta por sedes, promociones, shows, novedades, locales y **reservas reales con correo**. Es un caso de estudio de **Interacción Hombre-Máquina (UTP, APF3)**: parte de un prototipo con barreras de accesibilidad y llega a una versión usable con teclado, lector de pantalla, baja visión, daltonismo y uso móvil con una mano. El contenido lo entrega una API propia y se administra desde `/admin`.
 
-Este es el **sitio web de Rústica Perú**: carta por sedes, promociones, shows en vivo, novedades, locales y reservas. Se desarrolló como **caso de estudio de Interacción Hombre-Máquina (IHM)** (UTP, APF3): su objetivo es **mostrar mejoras y resolver problemas de uso y accesibilidad de personas con discapacidades** en la plataforma web de Rústica.
+## Enlaces
 
-Parte de un prototipo (v2.0) con barreras de accesibilidad y llega a una versión (v3.x) que se puede usar con teclado, lector de pantalla, baja visión, daltonismo y otras necesidades. El trabajo sigue tres etapas:
+| Qué | Dirección |
+| --- | --- |
+| Sitio público | https://rustica-ihm.onrender.com |
+| Panel de administración | https://rustica-ihm.onrender.com/admin/ |
+| API (comprobar que vive) | https://rustica-api.onrender.com/actuator/health |
+| Repositorio del sitio | https://github.com/EdisonNico/Rustica_HMI |
+| Repositorio de la API | https://github.com/EdisonNico/rustica-api |
+| Local (desarrollo) | http://localhost:3000 · admin: http://localhost:3000/admin/ |
 
-1. **Auditoría:** se detectan las barreras con los criterios WCAG 2.1 AA.
-2. **Rediseño inclusivo:** se corrigen contrastes, estructura, formularios y estados, y se agrega un panel de accesibilidad con modo noche y paletas para daltonismo.
-3. **Validación:** se prueba con teclado, lectores de pantalla, simulaciones de daltonismo y herramientas de contraste.
+> En el plan gratuito de Render la API se duerme tras ~15 min sin visitas; la primera carga puede tardar hasta ~50 s.
 
-Desde la v3.1 el contenido ya **no está escrito en el código**: el sitio lo lee de una **API propia** (repositorio `rustica-api`, Spring Boot + Supabase) y se administra desde un **panel `/admin`** dentro del mismo sitio. Así el equipo de Rústica puede subir platos, shows, promociones, novedades y cambiar la imagen principal sin tocar código.
+## Características
 
-## Herramientas utilizadas
+- **Carta interactiva por sede**, con categorías; en móvil se cambia de categoría **deslizando** o con los botones visibles «Anterior / Siguiente».
+- **Promociones, Shows (solo próximos, del más cercano al más lejano), Novedades y Locales**, con ventanas de detalle.
+- **Reservas reales** en 3 pasos (local y fecha · datos · confirmar). Se guardan en la base de datos, el cliente y el local reciben un correo, y el admin las gestiona (confirmar, cancelar, eliminar). Al cambiar el estado, el cliente recibe otro correo.
+- **Navegación móvil para el pulgar:** barra inferior (Inicio, Carta, Reservar, Más) y ventanas que se abren como **hoja desde abajo** y se cierran deslizando hacia abajo. En tablet y escritorio se usa la cabecera normal.
+- **Panel de accesibilidad:** modo noche, alto contraste, escala de grises, paletas para protanopia, deuteranopia y tritanopia, texto 125 % / 150 %, texto más legible y reducir animaciones.
+- **Lector de voz** (Web Speech API, dentro del panel de accesibilidad): lee en voz alta lo que tiene el foco al usar Tab, lee la página entera, tiene control de velocidad y botones **Escuchar** en las ventanas (los botones solo aparecen con el lector activado). Esc detiene la lectura.
+- **Panel `/admin`:** platos (con sedes y precio por sede), shows, promociones, novedades, imagen principal y reservas. No permite fechas ni horas pasadas.
+- Sitio rápido: portada con carga prioritaria y compresión de imágenes al subirlas desde el admin.
+
+## Herramientas
 
 **Interfaz**  
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white) ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
 
-**Datos y servicios (a través de la API)**  
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=supabase&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white)
+**API, datos y correo**  
+![Java](https://img.shields.io/badge/Java_21-ED8B00?style=flat&logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=supabase&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white) ![Brevo](https://img.shields.io/badge/Brevo-0B996E?style=flat&logo=brevo&logoColor=white)
 
 **Accesibilidad y pruebas**  
 ![WCAG 2.1 AA](https://img.shields.io/badge/WCAG_2.1_AA-005A9C?style=flat) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white) ![Lighthouse](https://img.shields.io/badge/Lighthouse-F44B21?style=flat&logo=lighthouse&logoColor=white) ![axe](https://img.shields.io/badge/axe-6E3AAF?style=flat) ![Stark](https://img.shields.io/badge/Stark-111827?style=flat) ![NVDA](https://img.shields.io/badge/NVDA-4B5563?style=flat) ![VoiceOver](https://img.shields.io/badge/VoiceOver-000000?style=flat&logo=apple&logoColor=white) ![TalkBack](https://img.shields.io/badge/TalkBack-3DDC84?style=flat&logo=android&logoColor=black)
 
 **Despliegue y control de versiones**  
-![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=black) ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
+![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=black) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
 
 **IA**  
 ![Claude Code](https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=claude&logoColor=white)
 
-| Recurso | Para qué se usa |
+| Capa | Tecnología |
 | --- | --- |
-| Next.js (App Router, `output: 'export'`) | Rutas reales y exportación a HTML estático |
-| React + TypeScript | Componentes y tipos para todos los datos de la API |
-| Tailwind CSS 4 (`@theme`) | Colores, tipografía y espaciado como tokens de diseño; temas y paletas |
-| `next/font` | Fuentes Playfair Display (títulos) y Source Sans 3 (texto) |
-| `<dialog>` nativo | Ventanas emergentes con foco atrapado, Esc para cerrar y retorno del foco |
-| `fetch` + hooks propios (`useRemote`) | Lectura de la API con estados de carga y error, y caché de la última respuesta |
-| `localStorage` | Preferencias de accesibilidad y copia temporal (30 min) de la última respuesta de la API |
-| `sessionStorage` | Token del administrador (se borra al cerrar la pestaña) |
-| Simulación de daltonismo (Machado 2009) | Comprobar protanopia, deuteranopia y tritanopia |
-| Lighthouse / axe / Stark | Auditorías de accesibilidad y contraste |
+| Sitio | Next.js (App Router, exportación estática), React, TypeScript, Tailwind CSS 4 |
+| API | Spring Boot 3.5, Java 21, Spring Security (JWT), JPA |
+| Datos | Supabase (PostgreSQL + Storage) |
+| Correo | Brevo (API HTTP, plan gratuito: 300 correos/día) |
+| Despliegue | Render (Static Site para el sitio, Web Service Docker para la API) |
+| Pruebas de accesibilidad | Lighthouse, axe, Stark, NVDA, VoiceOver, TalkBack |
 
 ## Cómo funciona
 
 ```
-Navegador ──► Sitio estático (Render Static Site, HTML generado por Next.js)
-                 │
-                 │  fetch (HTTPS, solo lectura)           /admin: fetch con token
+Navegador ──► Sitio estático (Render Static Site)
+                 │  fetch HTTPS            /admin: fetch con token
                  ▼
         API Spring Boot (Render Web Service) ──► Supabase PostgreSQL (datos)
-                                             └─► Supabase Storage (imágenes)
+                 │                           └─► Supabase Storage (imágenes)
+                 └─► Brevo (correos de reservas)
 ```
 
-- El sitio se **exporta como HTML estático**. El contenido se pide a la API desde el navegador cuando se abre la página.
-- Mientras llegan los datos se muestra «Cargando…». **No hay contenido de relleno:** si la API no responde, aparece un mensaje de error con botón «Reintentar», no información antigua.
-- En el plan gratuito de Render la API se duerme tras ~15 minutos sin visitas; la primera carga puede tardar hasta un minuto, y el sitio lo avisa.
-- Al refrescar, la última respuesta (guardada hasta 30 minutos) se pinta al instante y se actualiza en segundo plano. Cada cambio hecho en `/admin` borra esa copia.
+- El sitio es HTML estático; el contenido se pide a la API desde el navegador.
+- Mientras llega se muestra «Cargando…»; si falla, un error con botón «Reintentar». La última respuesta se guarda 30 minutos en `localStorage` para pintar al instante.
 
 ## Comandos
 
 ```bash
 npm install
-npm run dev      # desarrollo en http://localhost:3000
+npm run dev      # http://localhost:3000
 npm run build    # genera la carpeta out/
-npm run lint     # revisa tipos (ejecuta antes "npm run dev" o "build" para que Next genere next-env.d.ts)
-
-accesos
-http://localhost:3000 y el admin es http://localhost:3000/admin/.
-En producción: https://TU-SITIO.onrender.com y https://TU-SITIO.onrender.com/admin/. Todavía no tengo la dirección real del Static Site, cámbiala por la que te dé Render.
-
-Puebas local
-.env.local: NEXT_PUBLIC_API_URL=http://localhost:8080
+npm run lint     # revisa tipos
 ```
 
-Requiere Node.js 20.9 o superior.
+Requiere Node.js 20.9 o superior. Para probar con la API local: `.env.local` con `NEXT_PUBLIC_API_URL=http://localhost:8080` (y reiniciar `npm run dev`).
 
 ## Variables de entorno
 
-Se definen en `.env.local` (desarrollo, **no se sube a git**) y en Render → *Environment* (producción). Las variables `NEXT_PUBLIC_*` quedan **incluidas en el sitio publicado**: nunca pongas claves ni contraseñas en ellas.
+### Sitio (Render → rustica-ihm → Environment, o `.env.local`)
 
 | Variable | Obligatoria | Qué es |
 | --- | --- | --- |
-| `NEXT_PUBLIC_API_URL` | Sí | URL de la API sin «/» final. En desarrollo: `http://localhost:8080`; en producción debe ser `https://…` |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | No | Número para el botón flotante de WhatsApp (solo dígitos, con código de país). Sin él, el botón no se muestra |
+| `NEXT_PUBLIC_API_URL` | Sí | URL de la API sin «/» final: `https://rustica-api.onrender.com` |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | No | Número del botón de WhatsApp (solo dígitos, con código de país). Sin él, no se muestra |
 
-El sitio solo acepta una API con `https://` (o `http://localhost`), para que el token del administrador nunca viaje sin cifrar. Después de cambiar una variable hay que reiniciar `npm run dev` o volver a publicar.
+Las variables `NEXT_PUBLIC_*` quedan dentro del sitio publicado: nunca pongas claves en ellas. Tras cambiarlas hay que volver a desplegar.
+
+### API (Render → rustica-api → Environment)
+
+| Variable | Qué es |
+| --- | --- |
+| `DB_URL` | `jdbc:postgresql://HOST-DEL-SESSION-POOLER:5432/postgres?sslmode=require` |
+| `DB_USER` / `DB_PASSWORD` | Usuario (`postgres.xxxx`) y contraseña de la base |
+| `JWT_SECRET` | Clave aleatoria de 32 caracteres o más |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Crean el primer administrador (la contraseña, 12 caracteres o más). Bórrala de Render una vez creado |
+| `SUPABASE_URL` | Solo la base: `https://xxxx.supabase.co` (sin `/rest/v1`) |
+| `SUPABASE_SERVICE_KEY` | Clave secreta de Supabase (`sb_secret_…`) |
+| `SUPABASE_BUCKET` | `rustica` |
+| `CORS_ORIGINS` | `https://rustica-ihm.onrender.com` (separa varios con coma; sin «/» final) |
+| `BREVO_API_KEY` | Clave de Brevo con permiso solo de «Transactional email». Vacía = no se envían correos |
+| `MAIL_FROM` / `MAIL_FROM_NAME` | Remitente verificado en Brevo y su nombre |
+| `MAIL_ADMIN_TO` | Correo del local que recibe el aviso de cada reserva |
+
+Antes de la primera ejecución, corre `db/schema.sql` y `db/reservations.sql` en el SQL Editor de Supabase.
 
 ## Despliegue en Render
 
-El sitio es **HTML estático**, por lo que se publica como **Static Site**:
+| Servicio | Tipo | Configuración |
+| --- | --- | --- |
+| Sitio | Static Site | Build `npm install && npm run build` · Publish Directory `out` |
+| API | Web Service (Docker) | Se despliega solo con cada `git push` a `main` |
 
-| Campo | Valor |
-| --- | --- |
-| Build Command | `npm install && npm run build` |
-| Publish Directory | `out` |
-| Environment | `NEXT_PUBLIC_API_URL` (y opcionalmente `NEXT_PUBLIC_WHATSAPP_NUMBER`) |
+## Tamaños de imágenes
 
-Las cabeceras de seguridad (CSP, HSTS, etc.) se agregan en *Static Site → Settings → Headers*; los valores exactos están en `SEGURIDAD.md`. Un Static Site no se duerme; la API (Web Service) sí, en el plan gratuito.
+Peso objetivo: **menos de 200 KB, formato WebP**. El admin acepta JPG, PNG o WebP de hasta 5 MB y, al subir, reduce la imagen a un máximo de 1600 px y la convierte a WebP.
+
+| Imagen | Tamaño recomendado | Peso máximo |
+| --- | --- | --- |
+| Imagen principal (portada) | 1600 px de ancho | ~250 KB |
+| Shows y promociones (afiche vertical) | 800 × 1000 px | ~150 KB |
+| Novedades | 800 × 600 px | ~120 KB |
+| Platos de la carta | 600 × 600 px | ~80 KB |
 
 ## Estructura
 
 ```
 src/
-├─ app/                       rutas
-│  ├─ page.tsx                Inicio
-│  ├─ menu/                   Menú interactivo por sede
-│  ├─ promociones/ shows/ novedades/
-│  ├─ sedes/                  locales, horarios y mapas
-│  ├─ terminos-y-condiciones/ politica-de-privacidad/
-│  ├─ admin/                  panel de administración (noindex)
-│  ├─ layout.tsx              estructura común, fuentes, enlace «Saltar al contenido»
-│  └─ globals.css             tokens de diseño, temas, paletas y estilos de accesibilidad
+├─ app/                        rutas: Inicio, menu, promociones, shows, novedades, sedes,
+│                              terminos-y-condiciones, politica-de-privacidad, admin (noindex)
+│  ├─ layout.tsx               estructura común, fuentes, «Saltar al contenido»
+│  └─ globals.css              tokens de diseño, temas, paletas, hoja inferior móvil
 ├─ components/
-│  ├─ Header, Footer, Dialog, Dropdown, ThemeToggle, StatusMessage, LiveNotice, Icons, ui
-│  ├─ HomeContent, CarouselSection, MenuExplorer, DishCard, ShowsGrid, PromotionsGrid, NewsList
-│  ├─ LocationsExplorer, ReservationDialog / ReservationProvider, WhatsAppButton, LegalDocument
-│  ├─ PreferencesDialog       panel de accesibilidad
-│  └─ admin/                  AdminApp, CrudPanel, forms, fields, HeroPanel, useForm, types
-├─ data/                      textos que no cambian: sedes (horarios y direcciones), navegación y textos legales
+│  ├─ Header, Footer, BottomNav, Dialog, Dropdown, ThemeToggle, StatusMessage, LiveNotice, Icons, ui
+│  ├─ HomeContent, BrushEdge, CarouselSection, MenuExplorer, DishCard
+│  ├─ ShowsGrid, PromotionsGrid, NewsList, LocationsExplorer, LegalDocument
+│  ├─ ReservationDialog / ReservationProvider, WhatsAppButton
+│  ├─ PreferencesDialog        panel de accesibilidad
+│  ├─ VoiceReader, ListenButton  lector de voz
+│  └─ admin/                   AdminApp, CrudPanel, ReservationsPanel, HeroPanel, forms, fields, useForm, types
+├─ data/                       sedes (horarios y direcciones), navegación y textos legales
 ├─ lib/
-│  ├─ api.ts                  cliente de la API (HTTPS, tiempo máximo, validación de imágenes)
-│  ├─ content.ts              tipos de la interfaz y conversión desde las respuestas de la API
-│  ├─ useRemote.ts            hooks useMenu, useHome, useShows, usePromotions, useNews (carga, error, caché)
+│  ├─ api.ts                   cliente de la API (HTTPS, compresión de imágenes, reservas)
+│  ├─ content.ts, useRemote.ts tipos y hooks de carga con caché
+│  ├─ speech.ts, focusText.ts  voz y descripción de lo que tiene el foco
+│  ├─ useSwipe.ts              gestos de deslizar (siempre con botón equivalente)
 │  └─ format, reservation, useDismiss
-└─ assets/                    logos y hero.webp (imagen local por si la API no tiene imagen principal)
+└─ assets/                     logos y hero.webp (imagen local de respaldo)
 ```
 
-## Panel de administración (`/admin/`)
+API (`rustica-api`): `config/` (seguridad, CORS, administrador inicial) · `web/` (controladores) · `service/` (lógica, correo, imágenes) · `repo/` · `domain/` · `dto/` · `security/` (JWT, límite de intentos, cabeceras) · `db/` (SQL).
 
-Solo para personal autorizado. No aparece en el menú ni en buscadores (`noindex`) y exige iniciar sesión.
+## Panel de administración
 
 | Sección | Qué permite |
 | --- | --- |
-| **Platos** | Crear, editar, ocultar o borrar. Un plato se crea una vez y se marca en qué **sedes** se vende, con **precio propio opcional por sede**. Foto, categoría, etiqueta y «destacado» |
-| **Shows** | Artista, fecha, hora, sede, afiche y descripción |
-| **Promociones** | Título, precio, afiche, detalles, términos, vigencia, orden y si sale en el carrusel de Inicio |
+| **Reservas** | Ver, buscar y filtrar; confirmar, cancelar, volver a pendiente o eliminar; llamar o escribir al cliente |
+| **Platos** | Crear, editar, ocultar o borrar; sedes donde se vende y precio propio por sede |
+| **Shows** | Artista, fecha, hora, sede, afiche y descripción (sin fechas pasadas) |
+| **Promociones** | Título, precio, afiche, detalles, términos, vigencia y orden |
 | **Novedades** | Título, categoría, fecha, resumen e imagen |
 | **Imagen principal** | Cambia la foto grande del Inicio |
 
-Las imágenes (JPG, PNG o WebP, hasta 5 MB) se suben desde el propio formulario y la API las valida. Ocultar un elemento («Visible» desmarcado) es una alternativa a borrarlo.
-
-**Accesibilidad del panel:** formularios con etiqueta en cada campo, errores con texto e icono, resumen de errores con enlaces a cada campo, el foco pasa al título al cambiar de sección, ventanas nativas, confirmación antes de borrar, avisos `role="status"` / `role="alert"`, objetivos táctiles ≥ 44 px, modo noche y paletas de daltonismo.
-
-## Panel de accesibilidad
-
-Disponible desde cualquier página. Los cambios se aplican al instante y se recuerdan entre visitas.
-
-| Opción | Qué hace |
-| --- | --- |
-| Modo claro / Modo noche | Cambia entre fondo claro y oscuro. También hay un botón de sol y luna en la cabecera, siempre visible; sigue la preferencia del sistema si el visitante no eligió |
-| Modo estándar / Alto contraste | Cambia a colores de mayor contraste (también responde a `prefers-contrast: more`) |
-| Escala de grises | Muestra la página sin color para comprobar que nada depende de él |
-| Colores para daltonismo | Paletas separadas para **protanopia**, **deuteranopia** y **tritanopia** |
-| Tamaño del texto | Normal, 125 % o 150 % |
-| Texto de mayor legibilidad | Fuente sencilla y más espacio entre letras, palabras y líneas |
-| Reducir animaciones | Quita transiciones y animaciones (también responde a `prefers-reduced-motion`) |
-
-## Navegación con teclado
-
-Todo el sitio, incluido el panel `/admin/`, se puede usar sin ratón. El foco siempre es visible (anillo grueso) y nunca queda tapado por la cabecera fija.
-
-### Teclas generales
-
-| Tecla | Qué hace |
-| --- | --- |
-| **Tab** | Pasa al siguiente enlace, botón o campo |
-| **Shift + Tab** | Vuelve al anterior |
-| **Enter** | Abre un enlace, pulsa un botón o envía un formulario |
-| **Espacio** | Pulsa un botón, marca una casilla o elige una opción |
-| **Esc** | Cierra una ventana emergente o un desplegable |
-| **↑ ↓** | Desplazan la página (si el foco no está en un campo) |
-| **Re Pág / Av Pág**, **Espacio / Shift + Espacio** | Suben y bajan una pantalla |
-| **Inicio / Fin** | Van al principio o al final de la página |
-| **Ctrl + +** / **Ctrl + −** | Amplían y reducen el zoom del navegador |
-
-### Teclas por componente
-
-| Componente | Teclas | Qué hace |
-| --- | --- | --- |
-| **Saltar al contenido** | Tab (primer elemento), Enter | Salta la cabecera y va directo al contenido principal |
-| **Cabecera** | Tab, Enter | Recorre logo, navegación, redes, botón de sol y luna y botón de accesibilidad |
-| **Botón sol y luna** | Enter o Espacio | Cambia entre modo claro y modo noche |
-| **Menú móvil** | Enter o Espacio en «Menú», Esc | Abre y cierra el menú |
-| **Ventanas emergentes** (reserva, detalles, información, accesibilidad, formularios del panel) | Tab, Shift + Tab, Esc | El foco queda dentro de la ventana; Esc la cierra y devuelve el foco al botón que la abrió |
-| **Desplegables** (local y categorías del menú) | Enter o Espacio, Tab, Esc | Abren la lista, recorren y eligen una opción, y cierran sin elegir |
-| **Zonas de Sedes** | ← → ↑ ↓ | Cambian de zona; Tab entra y sale del grupo |
-| **Carruseles** | Tab, Enter o Espacio | Pasa por «Ver todas», las flechas y las tarjetas; las flechas desplazan el carrusel |
-| **Formulario de reserva** | Tab, Enter | Pasa de campo en campo; Enter envía |
-| **Listas de selección** (Hora, Personas, Local) | ↑ ↓, primera letra, Enter | Cambian la opción |
-| **Campo de fecha** | ← →, ↑ ↓, números | Se mueve entre día, mes y año y cambia el valor |
-| **Resumen de errores** | Tab, Enter | Cada enlace lleva el foco al campo con el problema |
-| **Panel de accesibilidad** | ↑ ↓, Espacio | Cambian las opciones de un grupo y marcan o desmarcan casillas |
-| **Panel `/admin/`** | Tab, Enter, Espacio, Esc | Secciones, listas, formularios, subida de imagen y confirmación de borrado |
-
-## Accesibilidad por tipo de discapacidad
+## Accesibilidad
 
 | Perfil | Qué se hizo |
 | --- | --- |
-| **Visual: ceguera** | `lang="es"`, título por página, un `h1` por vista, jerarquía de títulos, landmarks, enlace «Saltar al contenido», etiquetas asociadas a cada campo, nombres accesibles en todos los botones, estados con `aria-current` / `aria-expanded`, avisos con `role="status"` y `role="alert"` (también para «Cargando…» y errores de conexión), fotos decorativas con `alt=""`, aviso «(se abre en una pestaña nueva)». |
-| **Visual: baja visión y sensibilidad a la luz** | Contrastes corregidos (texto ≥ 4.5:1, bordes de campos ≥ 3:1), foco visible grueso en todo el sitio, texto escalable (rem), alto contraste, texto 125 % / 150 % y **modo noche** con contrastes verificados (texto principal 14.3:1, texto rojo 6.5:1). |
-| **Visual: daltonismo** | Paleta base (#FFFFFF, #202124, #595959, #D9D9D9, #F5F1E9) y tres paletas por tipo: en protanopia y deuteranopia la marca pasa a azul y el error a naranja oscuro; en tritanopia se conserva el rojo y se evitan el azul y el amarillo. Éxito, error, aviso e información (`StatusMessage`) usan **icono + texto + forma de borde**, así que no dependen del color. |
-| **Auditiva** | El sitio no usa audio ni video; toda la información está en texto. |
-| **Motora** | Todo operable con teclado, `<dialog>` nativo (foco atrapado, Esc, retorno del foco), desplegables que cierran con Esc, objetivos táctiles ≥ 44 px, formularios reales (Enter envía), sin gestos complejos ni límites de tiempo. |
-| **Cognitiva / aprendizaje** | Errores con causa y cómo corregirlos, resumen de errores con enlaces a cada campo, nombres consistentes («Hacer reserva», «Cerrar»), confirmación con fecha completa y hora en 12 h, mensajes claros cuando el servidor tarda («puede tardar hasta un minuto»), texto de mayor legibilidad, sin movimiento automático. |
-| **Vestibular / epilepsia** | `prefers-reduced-motion` y opción «Reducir animaciones»; nada parpadea. |
+| Ceguera | `lang="es"`, un `h1` por vista, landmarks, «Saltar al contenido», etiquetas en cada campo, estados con `aria-*`, avisos `role="status"` / `role="alert"`, lector de voz propio |
+| Baja visión | Contraste de texto ≥ 4.5:1 y de bordes ≥ 3:1, foco visible grueso, texto escalable, alto contraste y modo noche |
+| Daltonismo | Paletas para protanopia, deuteranopia y tritanopia; los estados usan icono + texto + forma, no solo color |
+| Auditiva | No hay audio ni video; todo está en texto |
+| Motora | Todo con teclado, ventanas `<dialog>` con foco atrapado, objetivos táctiles ≥ 44 px, gestos siempre con botón visible, navegación al alcance del pulgar |
+| Cognitiva | Errores con causa y solución, reserva en pasos con resumen antes de enviar, nombres consistentes, texto más legible |
+| Vestibular | `prefers-reduced-motion` y opción «Reducir animaciones»; nada parpadea |
 
-> Los contrastes se calcularon con la fórmula de WCAG a partir de los códigos de color. Las paletas de daltonismo se compararon con una simulación (matrices de Machado 2009): rojo y verde originales casi no se distinguen en protanopia y deuteranopia, y con las paletas nuevas la diferencia entre éxito y error es mucho mayor. Confírmalos con Stark o Lighthouse y completa la matriz del APF3 con tus propias capturas.
+### Teclas principales
+
+| Tecla | Qué hace |
+| --- | --- |
+| Tab / Shift + Tab | Siguiente / anterior elemento |
+| Enter / Espacio | Activa un botón o enlace, marca una casilla |
+| Esc | Cierra una ventana o desplegable; detiene la voz |
+| ← → ↑ ↓ | Cambian opciones en grupos, listas y fechas |
 
 ## Seguridad
 
-- **Sin secretos en el código:** el frontend solo contiene variables públicas; las claves viven en el servidor de la API y en Render.
-- **Sin inyección de código:** React escapa el texto; no se usa `innerHTML`. El único script en línea es una constante propia que restaura las preferencias de accesibilidad.
-- **Imágenes:** solo se muestran direcciones `https://` (se descartan `javascript:`, `data:` u otros esquemas).
-- **Sesión del administrador:** token JWT en `sessionStorage` (se borra al cerrar la pestaña), nunca en `localStorage` ni en cookies; si el servidor responde 401 se cierra la sesión.
-- **HTTPS:** Render entrega el certificado; el sitio rechaza una API que no use `https://` (salvo `localhost`).
-- **Cabeceras:** Content-Security-Policy, HSTS, `X-Content-Type-Options`, `X-Frame-Options` y `Referrer-Policy` configurables en Render (ver `SEGURIDAD.md`).
-- **Dependencias:** `.github/dependabot.yml` avisa de paquetes con versión nueva o fallos de seguridad. Ejecuta además `npm audit` y `npm outdated` antes de publicar.
-- **Archivos que no deben subirse a git:** `.env.local`, `log.txt`, `*.zip`.
+- Sin secretos en el código: el sitio solo tiene variables públicas; las claves viven en Render.
+- Todo lo que modifica datos exige sesión de administrador (JWT); lo demás se rechaza por defecto.
+- Contraseñas con BCrypt, límite de intentos de inicio de sesión y CORS limitado al sitio.
+- Reservas públicas: campo trampa para robots, límite por IP y límite global; el local se valida contra la base de datos.
+- Imágenes validadas por su contenido real (JPG, PNG o WebP), con nombre aleatorio.
+- El token del administrador vive en `sessionStorage`; el sitio no usa `innerHTML` y solo acepta APIs `https://`.
+- No subas a git: `.env`, `.env.local`, `*.zip`, `log.txt`. Rota cualquier clave que se haya compartido por chat.
 
-## Cambios respecto a la v2.0
+## Limitaciones conocidas
 
-- De un `App.tsx` de 1 561 líneas a componentes pequeños por responsabilidad; datos separados de la interfaz.
-- Navegación con rutas reales (botón «Atrás», enlaces compartibles, título por página) en lugar de estado interno.
-- Colores en tokens de diseño (`@theme`) en vez de estilos en línea repetidos; colores semánticos (`surface`, `brand`, `error`, `success`) para que el tema y las paletas cambien todo de una vez.
-- **Modo noche** con botón en la cabecera y en el panel, y paleta propia para cada tipo de daltonismo en oscuro.
-- Ventanas emergentes centradas y más anchas (hasta 42 rem), con el mismo componente para todas.
-- **Contenido administrable:** menú por sedes, shows, promociones, novedades e imagen principal salen de la API y se editan desde `/admin`. Se eliminaron los datos y afiches fijos del código (`shows`, `promotions`, `news`, `menu` y las hojas de afiches), y la imagen local pasó de 5.9 MB a 319 KB.
-- Se eliminó lo que no se usaba: carpeta `imports/`, fuente Dancing Script, `locations`/`Branch` sin uso, estado `hover` en JavaScript (ahora CSS), listas duplicadas de destacados.
-- Se retiraron los botones del pie «Trabaja con Nosotros» y «Libro de Reclamaciones», que no tenían ninguna acción. Agrégalos de nuevo cuando tengas sus enlaces reales.
-- «Encuentra local» en la cabecera es un enlace directo a `/sedes`.
-- Fechas en español (antes «Nov 1, 2026»).
-- Las fotos de platos y noticias son decorativas (`alt=""`) porque el nombre ya está en el título.
+- Con un remitente Gmail, algunos correos pueden llegar a **Spam** (para evitarlo se necesita un dominio propio).
+- No hay notificaciones push; los avisos son por correo.
+- Los horarios y direcciones de **Sedes** siguen en `src/data/locations.ts`.
+- La API gratuita de Render se duerme; la primera carga puede tardar.
 
 ## Pendiente de verificar
 
-- Recorrer todo el sitio solo con teclado (tabla de arriba), con zoom 200 %, un lector de pantalla (NVDA / VoiceOver / TalkBack), Lighthouse o axe y Stark, **incluido el panel `/admin/`**.
-- Revisar que ningún componente use colores escritos a mano (`bg-[#...]`, `text-green-600`), porque no cambiarían con las paletas de daltonismo.
-- **La reserva es de demostración:** muestra «Reserva confirmada» pero no envía datos a ningún servidor. Hay que conectarla (WhatsApp o un endpoint de la API con límite de envíos y campo anti-spam) o aclarar el texto.
-- Los horarios y direcciones de **Sedes** siguen en `src/data/locations.ts`; falta moverlos a la API para editarlos desde el panel.
-- Agregar las cabeceras de seguridad en Render y revisar `npm audit`.
+- Recorrer el sitio con teclado, zoom 200 %, lector de pantalla (NVDA / VoiceOver / TalkBack), Lighthouse, axe y Stark, incluido `/admin/`.
+- Probar en un **celular real**: barra inferior, hoja de reserva, gestos y lector de voz.
+- Añadir en Render las cabeceras de seguridad y revisar `npm audit`.

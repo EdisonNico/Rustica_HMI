@@ -7,10 +7,11 @@ import { useSyncExternalStore } from 'react'
  * El texto se parte en trozos cortos porque Chrome corta las lecturas largas.
  */
 export type SpeechState = 'idle' | 'speaking' | 'paused'
-interface Snapshot { state: SpeechState; rate: number; label: string }
+interface Snapshot { state: SpeechState; rate: number; label: string; focusMode: boolean }
 
 const RATE_KEY = 'rustica-voice-rate'
-let snapshot: Snapshot = { state: 'idle', rate: 1, label: '' }
+const FOCUS_KEY = 'rustica-voice-focus'
+let snapshot: Snapshot = { state: 'idle', rate: 1, label: '', focusMode: false }
 const listeners = new Set<() => void>()
 let session = 0 // cada lectura nueva invalida los eventos de la anterior
 
@@ -88,6 +89,45 @@ export function speak(text: string, label = 'el contenido') {
   return true
 }
 
+/** Dice una frase corta al instante (interrumpe lo que se esté leyendo). Se usa para anunciar el elemento con foco. */
+export function speakNow(text: string) {
+  if (!speechSupported() || !text.trim()) return
+  session++
+  window.speechSynthesis.cancel()
+  if (snapshot.state !== 'idle') emit({ state: 'idle', label: '' })
+  const voice = pickVoice()
+  const u = new SpeechSynthesisUtterance(text.replace(/[\p{Extended_Pictographic}\u200d\ufe0f]/gu, ''))
+  u.lang = voice?.lang ?? 'es-ES'
+  if (voice) u.voice = voice
+  u.rate = snapshot.rate
+  window.speechSynthesis.speak(u)
+}
+
+/** Lee la selección o, si no hay, el contenido principal de la página. */
+export function readPage() {
+  const selection = window.getSelection()?.toString().trim()
+  if (selection) return speak(selection, 'el texto seleccionado')
+  const main = document.getElementById('contenido')
+  return speak(main?.innerText ?? '', 'esta página')
+}
+
+export function setFocusMode(on: boolean) {
+  emit({ focusMode: on })
+  try {
+    localStorage.setItem(FOCUS_KEY, on ? '1' : '0')
+  } catch {
+    /* sin almacenamiento */
+  }
+}
+
+export function loadFocusMode() {
+  try {
+    if (localStorage.getItem(FOCUS_KEY) === '1') emit({ focusMode: true })
+  } catch {
+    /* sin almacenamiento */
+  }
+}
+
 export function pause() {
   if (snapshot.state !== 'speaking') return
   window.speechSynthesis.pause()
@@ -124,5 +164,5 @@ const subscribe = (l: () => void) => {
     listeners.delete(l)
   }
 }
-const serverSnapshot: Snapshot = { state: 'idle', rate: 1, label: '' }
+const serverSnapshot: Snapshot = { state: 'idle', rate: 1, label: '', focusMode: false }
 export const useSpeech = () => useSyncExternalStore(subscribe, () => snapshot, () => serverSnapshot)

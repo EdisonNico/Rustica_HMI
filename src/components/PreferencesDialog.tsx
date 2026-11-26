@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Dialog, DialogHeader, DialogPanel } from './Dialog'
+import { readPage, setFocusMode, setRate, speak, speakNow, speechSupported, stop, useSpeech } from '@/lib/speech'
 
 const KEY = 'rustica-prefs'
 const TITLE_ID = 'preferencias-titulo'
@@ -85,12 +86,66 @@ function PreferencesForm({ onClose }: { onClose: () => void }) {
     setPrefs(merged)
     apply(merged)
   }
+  const voice = useSpeech()
+  const canSpeak = typeof window !== 'undefined' && speechSupported()
 
   return (
     <DialogPanel size="sm">
       <DialogHeader eyebrow="Rústica Perú" title="Accesibilidad" titleId={TITLE_ID} onClose={onClose} />
       <div className="space-y-6 px-6 py-6">
         <p className="text-sm text-muted">Los cambios se aplican al instante y se recuerdan en este navegador.</p>
+
+        <fieldset>
+          <legend className="mb-1 font-bold text-ink">Lector de voz</legend>
+          {canSpeak ? (
+            <>
+              <Check
+                checked={voice.focusMode}
+                label="Leer en voz alta lo que tiene el foco"
+                hint="Con el teclado, cada vez que pulses Tab se dice el nombre del enlace, botón o campo donde estás. Esc detiene la voz."
+                onChange={on => {
+                  setFocusMode(on)
+                  if (on) speakNow('Lector de voz activado. Usa Tab para recorrer la página.')
+                  else stop()
+                }}
+              />
+              <div className="mt-2 flex flex-wrap items-center gap-2 px-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose()
+                    window.setTimeout(readPage, 450)
+                  }}
+                  className="min-h-11 cursor-pointer rounded-xl bg-red px-4 text-sm font-bold text-white hover:bg-red-dark"
+                >
+                  Leer esta página
+                </button>
+                {voice.state !== 'idle' && (
+                  <button type="button" onClick={stop} className="min-h-11 cursor-pointer rounded-xl border-2 border-field px-4 text-sm font-bold text-ink">
+                    Detener lectura
+                  </button>
+                )}
+              </div>
+              <label className="mt-2 flex items-center gap-2 px-2 text-base text-ink">
+                Velocidad
+                <select
+                  value={voice.rate}
+                  onChange={e => {
+                    setRate(Number(e.target.value))
+                    speak('Así sonará la voz.', 'una prueba de velocidad')
+                  }}
+                  className="min-h-11 cursor-pointer rounded-xl border-2 border-field bg-surface px-2 text-sm text-ink"
+                >
+                  <option value={0.8}>Lenta</option>
+                  <option value={1}>Normal</option>
+                  <option value={1.25}>Rápida</option>
+                </select>
+              </label>
+            </>
+          ) : (
+            <p className="px-2 text-sm text-muted">Este navegador no tiene lector de voz. Prueba con Chrome, Edge o Safari.</p>
+          )}
+        </fieldset>
 
         <fieldset>
           <legend className="mb-1 font-bold text-ink">Visualización</legend>

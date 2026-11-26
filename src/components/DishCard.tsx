@@ -1,8 +1,16 @@
+'use client'
+
+import { useSpeech } from '@/lib/speech'
 import type { DishView } from '@/lib/content'
 
 export function DishCard({ dish }: { dish: DishView }) {
+  // Con el lector de voz activo cada plato recibe el foco con Tab y se lee su nombre, precio y descripción
+  const { focusMode } = useSpeech()
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_2px_12px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(196,30,58,0.15)]">
+    <article
+      tabIndex={focusMode ? 0 : undefined}
+      aria-label={focusMode ? `${dish.name}, ${dish.price}. ${dish.description}` : undefined}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_2px_12px_rgba(0,0,0,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(196,30,58,0.15)]">
       <div className="relative h-[200px] overflow-hidden bg-cream">
         {/* Foto de ambientación: el nombre del plato ya está en el título, por eso alt vacío */}
         {dish.image && (

@@ -69,7 +69,7 @@ export function VoiceReader() {
       role="region"
       aria-label="Control de lectura en voz alta"
       data-no-speak
-      className="fixed bottom-5 left-5 z-30 flex max-w-[calc(100vw-7rem)] flex-wrap items-center gap-2 rounded-2xl border-2 border-ink bg-surface p-2 shadow-[0_6px_20px_rgba(0,0,0,0.22)] sm:bottom-7 sm:left-7"
+      className="fixed bottom-5 left-5 max-lg:bottom-24 z-30 flex max-w-[calc(100vw-7rem)] flex-wrap items-center gap-2 rounded-2xl border-2 border-ink bg-surface p-2 shadow-[0_6px_20px_rgba(0,0,0,0.22)] sm:bottom-7 sm:left-7"
     >
       <span role="status" className="px-2 text-sm font-semibold text-ink">
         {state === 'paused' ? 'En pausa' : 'Leyendo'}: {label}

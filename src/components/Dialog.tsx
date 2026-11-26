@@ -9,6 +9,8 @@ interface DialogProps {
   /** id del título (h2) de la ventana */
   labelledBy: string
   children: ReactNode
+  /** En pantallas pequeñas la ventana sube desde abajo (alcance del pulgar) y se puede cerrar deslizando hacia abajo. */
+  sheet?: boolean
 }
 
 /**
@@ -17,8 +19,9 @@ interface DialogProps {
  * el foco al botón que la abrió (WCAG 2.1.1, 2.4.3, 4.1.2).
  * El contenido solo se monta mientras está abierta, así el estado se reinicia.
  */
-export function Dialog({ open, onClose, labelledBy, children }: DialogProps) {
+export function Dialog({ open, onClose, labelledBy, children, sheet = false }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
+  const drag = useRef<number | null>(null)
 
   useEffect(() => {
     const dialog = ref.current
@@ -35,14 +38,40 @@ export function Dialog({ open, onClose, labelledBy, children }: DialogProps) {
       ref={ref}
       aria-labelledby={labelledBy}
       onClose={onClose}
+      onTouchStart={e => {
+        // Solo desde la barra de arrastre visible de la hoja
+        drag.current = sheet && (e.target as HTMLElement).closest('[data-sheet-handle]') ? e.touches[0].clientY : null
+      }}
+      onTouchMove={e => {
+        if (drag.current === null || !ref.current) return
+        const dy = Math.max(0, e.touches[0].clientY - drag.current)
+        ref.current.style.transform = `translateY(${dy}px)`
+      }}
+      onTouchEnd={e => {
+        const dialog = ref.current
+        if (drag.current === null || !dialog) return
+        const dy = e.changedTouches[0].clientY - drag.current
+        drag.current = null
+        dialog.style.transform = ''
+        if (dy > 90) onClose()
+      }}
       onClick={e => {
         // Un clic sobre el fondo oscuro llega al propio <dialog>
         if (e.target === e.currentTarget) onClose()
       }}
-      className="modal"
+      className={sheet ? 'modal sheet' : 'modal'}
     >
       {open ? children : null}
     </dialog>
+  )
+}
+
+/** Barra de arrastre de la hoja inferior: solo se ve en celular. Cerrar con el botón X sigue siempre disponible. */
+export function SheetHandle() {
+  return (
+    <div data-sheet-handle aria-hidden="true" className="flex h-6 cursor-grab touch-none items-center justify-center bg-charcoal sm:hidden">
+      <span className="h-1.5 w-12 rounded-full bg-gray-500" />
+    </div>
   )
 }
 

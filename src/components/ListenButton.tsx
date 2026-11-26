@@ -3,15 +3,15 @@
 import { useEffect, useState } from 'react'
 import { speak, speechSupported, stop, useSpeech } from '@/lib/speech'
 
-/** Botón «Escuchar» para ventanas (el lector flotante queda detrás de una ventana modal). */
+/** Botón «Escuchar» para ventanas: solo aparece si el lector de voz está activado en Accesibilidad. */
 export function ListenButton({ text, what }: { text: string; what: string }) {
-  const { state, label } = useSpeech()
+  const { state, label, focusMode } = useSpeech()
   const [supported, setSupported] = useState(false)
   useEffect(() => {
     setSupported(speechSupported())
     return () => stop()
   }, [])
-  if (!supported) return null
+  if (!supported || !focusMode) return null
   const active = state !== 'idle' && label === what
   return (
     <button

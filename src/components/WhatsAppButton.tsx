@@ -14,7 +14,7 @@ export function WhatsAppButton() {
       target="_blank"
       rel="noreferrer"
       aria-label="Contactar a Rústica por WhatsApp"
-      className="fixed bottom-5 right-5 z-30 grid size-16 place-items-center rounded-full bg-wa text-white shadow-[0_10px_28px_rgba(14,124,70,0.38)] transition-transform hover:-translate-y-1 sm:bottom-7 sm:right-7"
+      className="fixed bottom-5 right-5 max-lg:bottom-24 z-30 grid size-16 place-items-center rounded-full bg-wa text-white shadow-[0_10px_28px_rgba(14,124,70,0.38)] transition-transform hover:-translate-y-1 sm:bottom-7 sm:right-7"
     >
       <WhatsAppIcon />
       <NewTab />

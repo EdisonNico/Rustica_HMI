@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSwipe } from '@/lib/useSwipe'
 import { Dropdown } from './Dropdown'
 import { DishCard } from './DishCard'
 import { Chevron } from './Icons'
@@ -24,6 +25,14 @@ export function MenuExplorer() {
   // Si la sede no vende la categoría elegida, se muestra la primera que sí tenga platos
   const currentCategory = categories.find(item => item.value === category) ?? categories[0]
   const filtered = currentCategory ? dishes.filter(dish => dish.category === currentCategory.value) : []
+
+  const index = currentCategory ? categories.findIndex(item => item.value === currentCategory.value) : -1
+  const prev = index > 0 ? categories[index - 1] : null
+  const next = index >= 0 && index < categories.length - 1 ? categories[index + 1] : null
+  const swipe = useSwipe(
+    () => next && setCategory(next.value),
+    () => prev && setCategory(prev.value),
+  )
 
   return (
     <div className="min-h-screen bg-surface">
@@ -160,11 +169,39 @@ export function MenuExplorer() {
                 {loading ? 'Cargando…' : `${filtered.length} opciones · Local ${currentBranch?.label}`}
               </p>
             </div>
-            <div aria-busy={loading} className={`grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 ${loading ? 'opacity-60' : ''}`}>
+            <div {...swipe} aria-busy={loading} className={`grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 ${loading ? 'opacity-60' : ''}`}>
               {filtered.map(dish => (
                 <DishCard key={dish.id} dish={dish} />
               ))}
             </div>
+            {(prev || next) && (
+              <nav aria-label="Cambiar de categoría" className="mt-8 grid grid-cols-2 gap-3">
+                {prev ? (
+                  <button
+                    type="button"
+                    onClick={() => setCategory(prev.value)}
+                    className="min-h-12 cursor-pointer rounded-xl border-[1.5px] border-red bg-surface px-4 py-3 text-left text-sm font-semibold text-ink"
+                  >
+                    <span aria-hidden="true">← </span>
+                    <span className="block text-xs uppercase tracking-widest text-muted">Anterior</span>
+                    {prev.label}
+                  </button>
+                ) : (
+                  <span />
+                )}
+                {next ? (
+                  <button
+                    type="button"
+                    onClick={() => setCategory(next.value)}
+                    className="col-start-2 min-h-12 cursor-pointer rounded-xl bg-red px-4 py-3 text-right text-sm font-semibold text-white"
+                  >
+                    <span className="block text-xs uppercase tracking-widest opacity-80">Siguiente →</span>
+                    {next.label}
+                  </button>
+                ) : null}
+              </nav>
+            )}
+            <p className="mt-3 text-center text-xs text-muted sm:hidden">Desliza a los lados para cambiar de categoría</p>
           </>
         )}
       </div>

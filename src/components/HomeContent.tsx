@@ -36,7 +36,7 @@ export function HomeContent() {
       <div className="on-dark relative flex min-h-[560px] items-end md:h-[clamp(560px,42vw,860px)] justify-center overflow-hidden bg-charcoal text-center">
         {home?.heroUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={home.heroUrl} alt="" className="absolute inset-0 size-full object-cover object-top opacity-90" />
+          <img src={home.heroUrl} alt="" fetchPriority="high" decoding="async" className="absolute inset-0 size-full object-cover object-top opacity-90" />
         ) : heroFailed ? (
           <Image src={hero} alt="" fill sizes="100vw" className="object-cover object-top opacity-90" />
         ) : null}

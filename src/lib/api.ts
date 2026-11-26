@@ -1,4 +1,4 @@
-/**
+  /**
  * Cliente de la API de Rústica (Spring Boot).
  * La dirección se define con NEXT_PUBLIC_API_URL (por ejemplo https://rustica-api.onrender.com).
  * Si la variable no existe, el sitio funciona solo con los datos de src/data.
@@ -77,7 +77,26 @@ export function login(email: string, password: string) {
 }
 
 /** Sube una imagen (JPG, PNG o WebP, máx. 5 MB) y devuelve su ruta y URL pública. */
-export function uploadImage(token: string, file: File, folder: 'dishes' | 'shows' | 'promotions' | 'news' | 'hero') {
+/** Reduce la imagen en el navegador (máx. 1600 px, WebP) para que la web cargue más rápido. Si falla, sube la original. */
+async function compressImage(file: File): Promise<File> {
+  try {
+    if (file.size < 150 * 1024) return file
+    const bmp = await createImageBitmap(file)
+    const scale = Math.min(1, 1600 / Math.max(bmp.width, bmp.height))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(bmp.width * scale)
+    canvas.height = Math.round(bmp.height * scale)
+    canvas.getContext('2d')?.drawImage(bmp, 0, 0, canvas.width, canvas.height)
+    const blob: Blob | null = await new Promise(res => canvas.toBlob(res, 'image/webp', 0.82))
+    if (!blob || blob.type !== 'image/webp' || blob.size >= file.size) return file
+    return new File([blob], file.name.replace(/\.\w+$/, '') + '.webp', { type: 'image/webp' })
+  } catch {
+    return file
+  }
+}
+
+export async function uploadImage(token: string, original: File, folder: 'dishes' | 'shows' | 'promotions' | 'news' | 'hero') {
+  const file = await compressImage(original)
   const form = new FormData()
   form.append('file', file)
   form.append('folder', folder)

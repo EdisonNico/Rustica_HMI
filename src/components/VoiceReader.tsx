@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { describeFocus } from '@/lib/focusText'
-import { loadFocusMode, loadRate, pause, resume, speakNow, speechSupported, stop, useSpeech } from '@/lib/speech'
+import { loadFocusMode, loadRate, pause, resume, speak, speakNow, speechSupported, stop, useSpeech } from '@/lib/speech'
 
 /**
  * Motor del lector de voz (se activa desde el panel de Accesibilidad):
@@ -31,9 +31,21 @@ export function VoiceReader() {
   // Anuncia el elemento que recibe el foco
   useEffect(() => {
     if (!supported || !focusMode) return
+    let lastDialog: HTMLDialogElement | null = null
     const onFocus = (e: FocusEvent) => {
       const el = e.target
       if (!(el instanceof HTMLElement) || el.closest('[data-no-speak]')) return
+      // Al abrirse una ventana («Ver más», «Ver detalles», «Ver información») se lee su contenido
+      const dialog = el.closest('dialog')
+      if (dialog && dialog !== lastDialog) {
+        lastDialog = dialog
+        const heading = dialog.querySelector('h1, h2, h3')?.textContent?.trim() ?? 'Ventana'
+        const hasFields = dialog.querySelector('input, select, textarea') !== null
+        if (hasFields) speakNow(`Ventana: ${heading}`)
+        else speak(dialog.innerText.slice(0, 2500), 'la ventana abierta')
+        return
+      }
+      if (!dialog) lastDialog = null
       speakNow(describeFocus(el))
     }
     document.addEventListener('focusin', onFocus, true)

@@ -50,8 +50,21 @@ function kindOf(el: HTMLElement): string {
   return ''
 }
 
+/** «Ver más», «Ver detalles», «Ver información»…: se lee primero el contenido de la tarjeta a la que pertenecen. */
+function cardContext(el: HTMLElement): string {
+  const isAction = el instanceof HTMLButtonElement || el instanceof HTMLAnchorElement
+  if (!isAction) return ''
+  const card = el.closest('article') ?? (el instanceof HTMLButtonElement ? el.closest('li') : null)
+  if (!card || card.closest('nav, header, footer, dialog')) return ''
+  const own = clean(el.innerText)
+  const text = clean((card as HTMLElement).innerText.replace(own, ''), 320)
+  return text
+}
+
 export function describeFocus(el: HTMLElement): string {
   if (el === document.body) return ''
+  const context = cardContext(el)
+  if (context) return `${context}. ${clean(el.innerText) || nameOf(el)}`
   const parts: string[] = []
   const name = nameOf(el)
   const kind = kindOf(el)

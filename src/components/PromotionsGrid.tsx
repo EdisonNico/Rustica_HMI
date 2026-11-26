@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogHeader, DialogPanel } from './Dialog'
 import { Poster } from './ui'
 import { LiveNotice } from './LiveNotice'
+import { ListenButton } from './ListenButton'
 import { StatusMessage } from './StatusMessage'
 import { usePromotions } from '@/lib/useRemote'
 import type { PromotionView } from '@/lib/content'
@@ -74,6 +75,12 @@ export function PromotionsGrid() {
                   </ul>
                 </div>
               )}
+              <div className="mt-6">
+                <ListenButton
+                  what={`la promoción ${selected.title}`}
+                  text={`${selected.title}. ${selected.price ?? ''}. ${selected.subtitle ?? ''}. ${selected.details.join('. ')}. ${selected.terms.length ? 'Términos y condiciones: ' + selected.terms.join('. ') : ''}`}
+                />
+              </div>
             </div>
           </DialogPanel>
         )}

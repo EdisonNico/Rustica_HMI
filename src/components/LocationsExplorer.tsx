@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Dialog, DialogHeader, DialogPanel } from './Dialog'
 import { NewTab, primaryButton } from './ui'
+import { ListenButton } from './ListenButton'
 import { locationGroups, type LocationInfo } from '@/data/locations'
 import { mapsUrl } from '@/lib/format'
 
@@ -96,6 +97,10 @@ export function LocationsExplorer() {
                 Abrir en Google Maps
                 <NewTab />
               </a>
+              <ListenButton
+                what={`la información de ${selected.label}`}
+                text={`Rústica ${selected.label}. Dirección: ${selected.address}. Atención: ${selected.attention}. Karaoke: ${selected.karaoke}. Discoteca: ${selected.disco}.`}
+              />
             </dl>
           </DialogPanel>
         )}

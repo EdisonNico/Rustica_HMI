@@ -5,6 +5,7 @@ import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { ReservationProvider } from '@/components/ReservationProvider'
 import { WhatsAppButton } from '@/components/WhatsAppButton'
+import { VoiceReader } from '@/components/VoiceReader'
 
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair', display: 'swap' })
 const source = Source_Sans_3({ subsets: ['latin'], variable: '--font-source', display: 'swap' })
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </main>
           <Footer />
           <WhatsAppButton />
+          <VoiceReader />
         </ReservationProvider>
       </body>
     </html>

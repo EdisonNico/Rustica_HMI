@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { StatusMessage } from '../StatusMessage'
 import { CrudPanel } from './CrudPanel'
 import { HeroPanel } from './HeroPanel'
+import { ReservationsPanel } from './ReservationsPanel'
 import { DishForm, NewsForm, PromotionForm, ShowForm } from './forms'
 import { TextField } from './fields'
 import type { AdminDish, AdminNews, AdminPromotion, AdminShow, Refs } from './types'
@@ -29,6 +30,7 @@ const writeToken = (value: string) => {
 }
 
 const SECTIONS = [
+  { key: 'reservations', label: 'Reservas' },
   { key: 'dishes', label: 'Platos' },
   { key: 'shows', label: 'Shows' },
   { key: 'promotions', label: 'Promociones' },
@@ -126,7 +128,7 @@ function LoginForm({ onLogin, notice }: { onLogin: (token: string) => void; noti
 export function AdminApp() {
   const [token, setToken] = useState<string | null>(null) // null = todavía leyendo sessionStorage
   const [notice, setNotice] = useState<string>()
-  const [section, setSection] = useState<SectionKey>('dishes')
+  const [section, setSection] = useState<SectionKey>('reservations')
   const [refs, setRefs] = useState<Refs | null>(null)
   const heading = useRef<HTMLHeadingElement>(null)
   const first = useRef(true)
@@ -217,7 +219,9 @@ export function AdminApp() {
         {label}
       </h2>
 
-      {!refs ? (
+      {section === 'reservations' ? (
+        <ReservationsPanel key="reservations" {...common} />
+      ) : !refs ? (
         <p role="status" className="text-muted">Cargando sedes y categorías…</p>
       ) : (
         <>

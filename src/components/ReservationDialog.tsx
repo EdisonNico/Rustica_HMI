@@ -6,6 +6,7 @@ import { primaryButton } from './ui'
 import { branchGroups, locationGroups } from '@/data/locations'
 import { reservationTimesFor } from '@/lib/reservation'
 import { formatLongDate } from '@/lib/format'
+import { apiEnabled, ApiError, createReservation } from '@/lib/api'
 
 type FieldName = 'name' | 'email' | 'phone' | 'date' | 'time'
 type Errors = Partial<Record<FieldName, string>>
@@ -85,6 +86,9 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
   const [values, setValues] = useState({ name: '', email: '', phone: '', date: '', time: '', guests: '2', branch: 'barranco' })
   const [errors, setErrors] = useState<Errors>({})
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [serverError, setServerError] = useState('')
+  const [website, setWebsite] = useState('') // campo trampa: las personas no lo ven ni lo llenan
   const summaryRef = useRef<HTMLDivElement>(null)
   const confirmRef = useRef<HTMLHeadingElement>(null)
   const nameRef = useRef<HTMLInputElement>(null)
@@ -108,11 +112,45 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errors])
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (sending) return
     const found = validate(values, minDate)
+    if (!found.time && values.date === minDate && values.time) {
+      const now = new Date()
+      const current = `${pad(now.getHours())}:${pad(now.getMinutes())}`
+      if (values.time < current && values.time >= '06:00') found.time = 'Esa hora ya pasó. Elige una hora posterior.'
+    }
     setErrors(found)
-    if (Object.keys(found).length === 0) setSubmitted(true)
+    setServerError('')
+    if (Object.keys(found).length > 0) return
+    if (!apiEnabled) {
+      setServerError('Por ahora no podemos recibir reservas en línea. Escríbenos por WhatsApp o llama al local.')
+      return
+    }
+    setSending(true)
+    try {
+      await createReservation({
+        name: values.name.trim(),
+        email: values.email.trim(),
+        phone: values.phone,
+        date: values.date,
+        time: values.time,
+        guests: values.guests,
+        branch: values.branch,
+        branchLabel: location?.label ?? values.branch,
+        website,
+      })
+      setSubmitted(true)
+    } catch (err) {
+      setServerError(
+        err instanceof ApiError && err.status !== 0
+          ? err.message
+          : 'No pudimos enviar tu reserva. Si el servidor estaba dormido, espera un minuto e inténtalo otra vez.',
+      )
+    } finally {
+      setSending(false)
+    }
   }
 
   // Si cambia el local, la hora elegida se conserva solo si sigue disponible.
@@ -135,7 +173,7 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
             🎉
           </p>
           <h2 id={TITLE_ID} ref={confirmRef} tabIndex={-1} className="mb-3 font-display text-2xl font-bold text-brand">
-            ¡Reserva confirmada!
+            ¡Reserva recibida!
           </h2>
           <div role="status" className="mb-6 space-y-1 text-body">
             <p>
@@ -145,6 +183,7 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
               Te esperamos en <strong>Rústica {location?.label}</strong> el <strong>{formatLongDate(values.date)}</strong> a las{' '}
               <strong>{time}</strong>.
             </p>
+            <p className="pt-2 text-sm text-muted">El local la revisará y te contactará al teléfono o correo que indicaste para confirmarla.</p>
           </div>
           <button type="button" onClick={onClose} className={`${primaryButton} w-full py-3`}>
             Cerrar
@@ -312,8 +351,24 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <button type="submit" className={`${primaryButton} mt-2 w-full py-3 text-base`}>
-          Confirmar reserva
+        {/* Campo trampa contra robots: oculto para personas y lectores de pantalla */}
+        <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+          <label>
+            No llenar este campo
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={e => setWebsite(e.target.value)} />
+          </label>
+        </div>
+
+        {serverError && (
+          <div role="alert" className="rounded-xl border-2 border-l-8 border-error bg-error-tint p-4 text-sm font-semibold text-ink">
+            <span aria-hidden="true">✕ </span>
+            <span className="sr-only">Error: </span>
+            {serverError}
+          </div>
+        )}
+
+        <button type="submit" disabled={sending} className={`${primaryButton} mt-2 w-full py-3 text-base disabled:opacity-60`}>
+          {sending ? 'Enviando…' : 'Enviar reserva'}
         </button>
       </form>
     </DialogPanel>

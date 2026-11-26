@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { ListenButton } from './ListenButton'
 import { Dialog, DialogPanel, CloseButton } from './Dialog'
 import { LiveNotice } from './LiveNotice'
 import { StatusMessage } from './StatusMessage'
@@ -76,6 +77,9 @@ export function NewsList() {
                 {selected.title}
               </h2>
               <p className="whitespace-pre-line text-sm leading-6 text-body">{selected.excerpt}</p>
+              <div className="mt-5">
+                <ListenButton what={`la novedad ${selected.title}`} text={`${selected.title}. ${selected.cat}. ${selected.date ? formatDate(selected.date) + '. ' : ''}${selected.excerpt}`} />
+              </div>
             </div>
           </DialogPanel>
         )}

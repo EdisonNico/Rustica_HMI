@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Dialog, DialogPanel, CloseButton } from './Dialog'
 import { Poster } from './ui'
+import { ListenButton } from './ListenButton'
 import { LiveNotice } from './LiveNotice'
 import { StatusMessage } from './StatusMessage'
 import { useShows } from '@/lib/useRemote'
@@ -80,6 +81,9 @@ export function ShowsGrid() {
                       {paragraph}
                     </p>
                   ))}
+                </div>
+                <div className="mt-4">
+                  <ListenButton what={`el show de ${selected.artist}`} text={`${selected.artist}. ${selected.dateLabel}${selected.timeLabel ? ', ' + selected.timeLabel : ''}. ${selected.location}. ${selected.description.join(' ')}`} />
                 </div>
               </div>
             </div>

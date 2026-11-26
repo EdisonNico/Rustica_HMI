@@ -87,3 +87,16 @@ export function uploadImage(token: string, file: File, folder: 'dishes' | 'shows
     body: form,
   })
 }
+
+export interface ReservationInput {
+  name: string; email: string; phone: string; date: string; time: string
+  guests: string; branch: string; branchLabel: string; website: string
+}
+
+/** Reserva pública: no lleva token. El servidor la valida y limita los envíos por dirección IP. */
+export const createReservation = (data: ReservationInput) =>
+  request<{ ok: boolean }>('/api/reservations', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })

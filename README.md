@@ -67,7 +67,6 @@ Requiere Node.js 20.9 o superior. Para probar con la API local: `.env.local` con
 | Variable | Obligatoria | Qué es |
 | --- | --- | --- |
 | `NEXT_PUBLIC_API_URL` | Sí | URL de la API sin «/» final: `https://rustica-api.onrender.com` |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | No | Número del botón de WhatsApp (solo dígitos, con código de país). Sin él, no se muestra |
 
 Las variables `NEXT_PUBLIC_*` quedan dentro del sitio publicado: nunca pongas claves en ellas. Tras cambiarlas hay que volver a desplegar.
 
@@ -119,7 +118,7 @@ src/
 │  ├─ Header, Footer, BottomNav, Dialog, Dropdown, ThemeToggle, StatusMessage, LiveNotice, Icons, ui
 │  ├─ HomeContent, BrushEdge, CarouselSection, MenuExplorer, DishCard
 │  ├─ ShowsGrid, PromotionsGrid, NewsList, LocationsExplorer, LegalDocument
-│  ├─ ReservationDialog / ReservationProvider, WhatsAppButton
+│  ├─ ReservationDialog / ReservationProvider
 │  ├─ PreferencesDialog        panel de accesibilidad
 │  ├─ VoiceReader, ListenButton  lector de voz
 │  └─ admin/                   AdminApp, CrudPanel, ReservationsPanel, HeroPanel, forms, fields, useForm, types
@@ -176,4 +175,3 @@ API (`rustica-api`): `config/` (seguridad, CORS, administrador inicial) · `web/
 - Imágenes validadas por su contenido real (JPG, PNG o WebP), con nombre aleatorio.
 - El token del administrador vive en `sessionStorage`; el sitio no usa `innerHTML` y solo acepta APIs `https://`.
 - No subas a git: `.env`, `.env.local`, `*.zip`, `log.txt`. Rota cualquier clave que se haya compartido por chat.
-

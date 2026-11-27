@@ -1,6 +1,6 @@
 # Rústica Perú · Sitio web accesible (Next.js)
 
-Sitio web de **Rústica Perú**: carta por sedes, promociones, shows, novedades, locales y **reservas reales con correo**. Es un caso de estudio de **Interacción Hombre-Máquina (UTP, APF3)**: parte de un prototipo con barreras de accesibilidad y llega a una versión usable con teclado, lector de pantalla, baja visión, daltonismo y uso móvil con una mano. El contenido lo entrega una API propia y se administra desde `/admin`.
+Sitio web de **Rústica Perú**: carta por sedes, promociones, shows, novedades, locales y **reservas reales con correo**. Es el **avance final** del caso de estudio de **Interacción Hombre-Máquina (UTP)**, pensado para **personas con dificultades visuales, auditivas, motoras o cognitivas**: parte de un prototipo con barreras de accesibilidad y llega a una versión que se puede usar con teclado, lector de pantalla, baja visión, daltonismo y con una sola mano desde el celular. El contenido lo entrega una API propia y se administra desde `/admin`.
 
 ## Enlaces
 
@@ -11,7 +11,6 @@ Sitio web de **Rústica Perú**: carta por sedes, promociones, shows, novedades,
 | API (comprobar que vive) | https://rustica-api.onrender.com/actuator/health |
 | Repositorio del sitio | https://github.com/EdisonNico/Rustica_HMI |
 | Repositorio de la API | https://github.com/EdisonNico/rustica-api |
-| Local (desarrollo) | http://localhost:3000 · admin: http://localhost:3000/admin/ |
 
 > En el plan gratuito de Render la API se duerme tras ~15 min sin visitas; la primera carga puede tardar hasta ~50 s.
 
@@ -34,9 +33,6 @@ Sitio web de **Rústica Perú**: carta por sedes, promociones, shows, novedades,
 **API, datos y correo**  
 ![Java](https://img.shields.io/badge/Java_21-ED8B00?style=flat&logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat&logo=springboot&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white) ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat&logo=supabase&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white) ![Brevo](https://img.shields.io/badge/Brevo-0B996E?style=flat&logo=brevo&logoColor=white)
 
-**Accesibilidad y pruebas**  
-![WCAG 2.1 AA](https://img.shields.io/badge/WCAG_2.1_AA-005A9C?style=flat) ![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white) ![Lighthouse](https://img.shields.io/badge/Lighthouse-F44B21?style=flat&logo=lighthouse&logoColor=white) ![axe](https://img.shields.io/badge/axe-6E3AAF?style=flat) ![Stark](https://img.shields.io/badge/Stark-111827?style=flat) ![NVDA](https://img.shields.io/badge/NVDA-4B5563?style=flat) ![VoiceOver](https://img.shields.io/badge/VoiceOver-000000?style=flat&logo=apple&logoColor=white) ![TalkBack](https://img.shields.io/badge/TalkBack-3DDC84?style=flat&logo=android&logoColor=black)
-
 **Despliegue y control de versiones**  
 ![Render](https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=black) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white) ![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=flat&logo=visualstudiocode&logoColor=white)
 
@@ -50,7 +46,7 @@ Sitio web de **Rústica Perú**: carta por sedes, promociones, shows, novedades,
 | Datos | Supabase (PostgreSQL + Storage) |
 | Correo | Brevo (API HTTP, plan gratuito: 300 correos/día) |
 | Despliegue | Render (Static Site para el sitio, Web Service Docker para la API) |
-| Pruebas de accesibilidad | Lighthouse, axe, Stark, NVDA, VoiceOver, TalkBack |
+| Accesibilidad | Criterios WCAG 2.1 AA y Web Speech API (lector de voz propio) |
 
 ## Cómo funciona
 
@@ -200,9 +196,3 @@ API (`rustica-api`): `config/` (seguridad, CORS, administrador inicial) · `web/
 - No hay notificaciones push; los avisos son por correo.
 - Los horarios y direcciones de **Sedes** siguen en `src/data/locations.ts`.
 - La API gratuita de Render se duerme; la primera carga puede tardar.
-
-## Pendiente de verificar
-
-- Recorrer el sitio con teclado, zoom 200 %, lector de pantalla (NVDA / VoiceOver / TalkBack), Lighthouse, axe y Stark, incluido `/admin/`.
-- Probar en un **celular real**: barra inferior, hoja de reserva, gestos y lector de voz.
-- Añadir en Render las cabeceras de seguridad y revisar `npm audit`.

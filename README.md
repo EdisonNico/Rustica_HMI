@@ -48,19 +48,6 @@ Sitio web de **Rústica Perú**: carta por sedes, promociones, shows, novedades,
 | Despliegue | Render (Static Site para el sitio, Web Service Docker para la API) |
 | Accesibilidad | Criterios WCAG 2.1 AA y Web Speech API (lector de voz propio) |
 
-## Cómo funciona
-
-```
-Navegador ──► Sitio estático (Render Static Site)
-                 │  fetch HTTPS            /admin: fetch con token
-                 ▼
-        API Spring Boot (Render Web Service) ──► Supabase PostgreSQL (datos)
-                 │                           └─► Supabase Storage (imágenes)
-                 └─► Brevo (correos de reservas)
-```
-
-- El sitio es HTML estático; el contenido se pide a la API desde el navegador.
-- Mientras llega se muestra «Cargando…»; si falla, un error con botón «Reintentar». La última respuesta se guarda 30 minutos en `localStorage` para pintar al instante.
 
 ## Comandos
 

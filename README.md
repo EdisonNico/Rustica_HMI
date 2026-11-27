@@ -177,9 +177,3 @@ API (`rustica-api`): `config/` (seguridad, CORS, administrador inicial) · `web/
 - El token del administrador vive en `sessionStorage`; el sitio no usa `innerHTML` y solo acepta APIs `https://`.
 - No subas a git: `.env`, `.env.local`, `*.zip`, `log.txt`. Rota cualquier clave que se haya compartido por chat.
 
-## Limitaciones conocidas
-
-- Con un remitente Gmail, algunos correos pueden llegar a **Spam** (para evitarlo se necesita un dominio propio).
-- No hay notificaciones push; los avisos son por correo.
-- Los horarios y direcciones de **Sedes** siguen en `src/data/locations.ts`.
-- La API gratuita de Render se duerme; la primera carga puede tardar.

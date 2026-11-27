@@ -305,7 +305,7 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
                   ))}
                 </select>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                 <Field fieldId={id('date')} label="Fecha" error={errors.date}>
                   <input
                     id={id('date')}
@@ -317,7 +317,7 @@ function ReservationForm({ onClose }: { onClose: () => void }) {
                     required
                     aria-invalid={!!errors.date}
                     aria-describedby={describedBy('date')}
-                    className={`${inputBase} ${border('date')}`}
+                    className={`${inputBase} ${border('date')} min-w-0 max-w-full`}
                   />
                 </Field>
                 <Field fieldId={id('time')} label="Hora" error={errors.time}>

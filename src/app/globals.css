@@ -262,8 +262,11 @@ main p a, footer p a, .prose a { text-decoration: underline; text-underline-offs
 }
 .skip-link:focus { top: 1rem; }
 
-/* Objetivos táctiles mínimos (2.5.8) */
-button, [role='button'], summary, select, input[type='checkbox'], input[type='radio'] { min-height: 24px; }
+/* Objetivos táctiles mínimos (2.5.8). Va en la capa base para que las clases de Tailwind (min-h-14, etc.) puedan ampliarlos:
+   una regla sin capa le ganaba a todas las utilidades y encogía botones como «Accesibilidad» en el menú móvil. */
+@layer base {
+  button, [role='button'], summary, select, input[type='checkbox'], input[type='radio'] { min-height: 24px; }
+}
 
 /* ── Ventanas emergentes con <dialog> nativo ───────────────────────────── */
 dialog.modal {
